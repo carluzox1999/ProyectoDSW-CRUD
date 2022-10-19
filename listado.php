@@ -8,6 +8,13 @@
         border-style: outset;
         text-align: center;
     }
+
+    .headerPagina{
+        background-color: gray;
+        color: black;
+        height: 5em;
+        text-align: center;
+    }
 </style>
 
 <?php
@@ -22,7 +29,9 @@ $dsn = "mysql:host=$host;dbname=$db;";
 
 try {
     $conProyecto = new PDO($dsn, $user, $pass);
-    echo "<h3>Conectado a la base de datos</h3>";
+    echo "<div class='headerPagina'>";
+        echo "<h3>Conectado a la base de datos</h3>";
+    echo "</div>";
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
