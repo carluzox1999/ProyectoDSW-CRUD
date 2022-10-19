@@ -6,37 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Document</title>
 </head>
 
 <body>
-    <style>
-        .headerPagina {
-            display: flex;
-            background-color: gray;
-            color: black;
-            height: 5em;
-            justify-content: center;
-            align-items: center;
-        }
-
-        table {
-            width: 100%;
-        }
-
-        tr th {
-            background-color: black;
-            color: white;
-            height: 2em;
-        }
-
-        td {
-            text-align: center;
-        }
-    </style>
-
     <?php
-
     // PDO
     $host = "localhost";
     $db = "proyecto";
@@ -44,18 +19,28 @@
     $pass = "carlos1234";
     // $dsn = "pgsql:host=$host;dbname=$db;";
     $dsn = "mysql:host=$host;dbname=$db;";
+    ?>
 
-    try {
-        $conProyecto = new PDO($dsn, $user, $pass);
-        echo "<div class='headerPagina'>";
-        echo "<h3>Conectado a la base de datos</h3>";
-        echo "</div>";
-    } catch (Exception $e) {
-        echo "<div class='headerPagina'>";
-        die("Error: " . $e->getMessage());
-        echo "</div>";
-    }
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <?php
+            try {
+                $conProyecto = new PDO($dsn, $user, $pass);
+                echo "<div'>";
+                echo "<p>Conectado</p>";
+                echo "</div>";
+            } catch (Exception $e) {
+                echo "<div class='headerPagina'>";
+                die("Error: " . $e->getMessage());
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </div>
 
+
+
+    <?php
     $result = $conProyecto->query(
         "SELECT id, nombre FROM productos"
     );
