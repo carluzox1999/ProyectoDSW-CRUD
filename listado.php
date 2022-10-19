@@ -1,4 +1,13 @@
 <style>
+    .headerPagina{
+        display: flex;
+        background-color: gray;
+        color: black;
+        height: 5em;
+        justify-content: center;
+        align-items: center;
+    }
+    
     table{
         border-style: outset;
         width: 100%;
@@ -6,13 +15,6 @@
 
     td{
         border-style: outset;
-        text-align: center;
-    }
-
-    .headerPagina{
-        background-color: gray;
-        color: black;
-        height: 5em;
         text-align: center;
     }
 </style>
@@ -33,7 +35,9 @@ try {
         echo "<h3>Conectado a la base de datos</h3>";
     echo "</div>";
 } catch (Exception $e) {
-    die("Error: " . $e->getMessage());
+    echo "<div class='headerPagina'>";
+        die("Error: " . $e->getMessage());
+    echo "</div>";
 }
 
 $result = $conProyecto->query(
