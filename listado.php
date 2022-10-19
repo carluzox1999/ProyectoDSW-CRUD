@@ -7,14 +7,18 @@
         justify-content: center;
         align-items: center;
     }
-    
+
     table{
-        border-style: outset;
         width: 100%;
     }
 
+    tr th{
+        background-color: black;
+        color: white;
+        height: 2em;
+    }
+
     td{
-        border-style: outset;
         text-align: center;
     }
 </style>
