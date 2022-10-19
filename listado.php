@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-    <title>Document</title>
+    <title>Proyecto DSW</title>
 </head>
 
 <body>
@@ -21,57 +21,62 @@
     $dsn = "mysql:host=$host;dbname=$db;";
     ?>
 
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <?php
-            try {
-                $conProyecto = new PDO($dsn, $user, $pass);
-                echo "<div'>";
-                echo "<p>Conectado</p>";
-                echo "</div>";
-            } catch (Exception $e) {
-                echo "<div class='headerPagina'>";
-                die("Error: " . $e->getMessage());
-                echo "</div>";
-            }
-            ?>
-        </div>
-    </div>
-
-
+    <?php
+    try {
+        $conProyecto = new PDO($dsn, $user, $pass);
+        echo "<div class=headerConexionSi>";
+        echo "<strong>Conectado a base de datos: $db</strong>";
+        echo "</div>";
+    } catch (Exception $e) {
+        echo "<div class='headerConexionNo'>";
+        die("<strong>Error: </strong>" . $e->getMessage());
+        echo "</div>";
+    }
+    ?>
 
     <?php
     $result = $conProyecto->query(
         "SELECT id, nombre FROM productos"
     );
 
-
     $resultado = $result->fetch(PDO::FETCH_OBJ);
-
-    echo "<h1>Gestión de productos</h1>";
-    echo "<p>Boton Crear</p>";
-
-    echo "<table class='default'>";
-    echo "<tr>";
-    echo "<th>Detalle</th>";
-    echo "<th>Codigo</th>";
-    echo "<th>Nombre</th>";
-    echo "<th>Acciones</th>";
-    echo "</tr>";
-    while ($resultado != null) {
-        echo "<tr>";
-        echo "<td><p>Detalles</p></td>";
-        echo "<td>$resultado->id</td>";
-        echo "<td>$resultado->nombre</td>";
-        echo "<td><p>Acciones</p></td>";
-        echo "</tr>";
-        echo "</table";
-
-        $resultado = $result->fetch(PDO::FETCH_OBJ);
-    }
-    $conProyecto = null;
     ?>
-    <script src="./js/bootstrap.min.js"></script>
+
+    <hr>
+
+    <h1>Gestión de productos</h1>
+
+    <div class="d-grid gap-2">
+        <a href="crear.php" class="btn btn-success btn-block boton">Crear producto</a>
+    </div>
+
+
+    <table class="table table-striped table-hover">
+        <tr class="table-dark">
+            <th class="detalle">Detalle</th>
+            <th class="codigo">Codigo</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+        <?php
+        while ($resultado != null) {
+            echo "<tr>";
+            echo "<td class='detalle'><a href='' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
+            echo "<td class='codigo'>$resultado->id</td>";
+            echo "<td>$resultado->nombre</td>";
+            echo "<td>
+                <a href='' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
+                <a href='' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
+            echo "</tr>";
+            echo "</table";
+
+            $resultado = $result->fetch(PDO::FETCH_OBJ);
+        }
+        $conProyecto = null;
+        ?>
+
+
+        <script src="./js/bootstrap.min.js"></script>
 </body>
 
 </html>
