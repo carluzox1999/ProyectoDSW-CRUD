@@ -1,75 +1,92 @@
-<style>
-    .headerPagina{
-        display: flex;
-        background-color: gray;
-        color: black;
-        height: 5em;
-        justify-content: center;
-        align-items: center;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    table{
-        width: 100%;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <title>Document</title>
+</head>
 
-    tr th{
-        background-color: black;
-        color: white;
-        height: 2em;
-    }
+<body>
+    <style>
+        .headerPagina {
+            display: flex;
+            background-color: gray;
+            color: black;
+            height: 5em;
+            justify-content: center;
+            align-items: center;
+        }
 
-    td{
-        text-align: center;
-    }
-</style>
+        table {
+            width: 100%;
+        }
 
-<?php
+        tr th {
+            background-color: black;
+            color: white;
+            height: 2em;
+        }
 
-// PDO
-$host = "localhost";
-$db = "proyecto";
-$user = "carlos";
-$pass = "carlos1234";
-// $dsn = "pgsql:host=$host;dbname=$db;";
-$dsn = "mysql:host=$host;dbname=$db;";
+        td {
+            text-align: center;
+        }
+    </style>
 
-try {
-    $conProyecto = new PDO($dsn, $user, $pass);
-    echo "<div class='headerPagina'>";
+    <?php
+
+    // PDO
+    $host = "localhost";
+    $db = "proyecto";
+    $user = "carlos";
+    $pass = "carlos1234";
+    // $dsn = "pgsql:host=$host;dbname=$db;";
+    $dsn = "mysql:host=$host;dbname=$db;";
+
+    try {
+        $conProyecto = new PDO($dsn, $user, $pass);
+        echo "<div class='headerPagina'>";
         echo "<h3>Conectado a la base de datos</h3>";
-    echo "</div>";
-} catch (Exception $e) {
-    echo "<div class='headerPagina'>";
+        echo "</div>";
+    } catch (Exception $e) {
+        echo "<div class='headerPagina'>";
         die("Error: " . $e->getMessage());
-    echo "</div>";
-}
+        echo "</div>";
+    }
 
-$result = $conProyecto->query(
-"SELECT id, nombre FROM productos");
+    $result = $conProyecto->query(
+        "SELECT id, nombre FROM productos"
+    );
 
-
-$resultado = $result->fetch(PDO::FETCH_OBJ);
-
-echo "<h1>Gestión de productos</h1>";
-echo "<p>Boton Crear</p>";
-
-echo "<table class='default'>";
-        echo "<tr>";
-            echo "<th>Detalle</th>";
-            echo "<th>Codigo</th>";
-            echo "<th>Nombre</th>";
-            echo "<th>Acciones</th>";
-        echo "</tr>";
-while ($resultado != null) {
-        echo "<tr>";
-            echo "<td><p>Detalles</p></td>";
-            echo "<td>$resultado->id</td>";
-            echo "<td>$resultado->nombre</td>";
-            echo "<td><p>Acciones</p></td>";
-        echo "</tr>";
-    echo "</table";
 
     $resultado = $result->fetch(PDO::FETCH_OBJ);
-}
-$conProyecto = null;
-?>
+
+    echo "<h1>Gestión de productos</h1>";
+    echo "<p>Boton Crear</p>";
+
+    echo "<table class='default'>";
+    echo "<tr>";
+    echo "<th>Detalle</th>";
+    echo "<th>Codigo</th>";
+    echo "<th>Nombre</th>";
+    echo "<th>Acciones</th>";
+    echo "</tr>";
+    while ($resultado != null) {
+        echo "<tr>";
+        echo "<td><p>Detalles</p></td>";
+        echo "<td>$resultado->id</td>";
+        echo "<td>$resultado->nombre</td>";
+        echo "<td><p>Acciones</p></td>";
+        echo "</tr>";
+        echo "</table";
+
+        $resultado = $result->fetch(PDO::FETCH_OBJ);
+    }
+    $conProyecto = null;
+    ?>
+    <script src="./js/bootstrap.min.js"></script>
+</body>
+
+</html>
