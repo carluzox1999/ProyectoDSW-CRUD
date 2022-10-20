@@ -1,0 +1,17 @@
+body{
+    background-color: #F8F9F9 ;
+}
+
+h1{
+    text-align: center;
+}
+
+.estilodiv{
+    border-style: groove;
+    border-width: 5px;
+    border-color: black;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 1% 5% 1% 5%;
+    
+}

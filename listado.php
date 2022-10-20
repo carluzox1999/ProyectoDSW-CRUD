@@ -11,35 +11,13 @@
 </head>
 
 <body>
-    <?php
-    // PDO
-    $host = "localhost";
-    $db = "proyecto";
-    $user = "carlos";
-    $pass = "carlos1234";
-    // $dsn = "pgsql:host=$host;dbname=$db;";
-    $dsn = "mysql:host=$host;dbname=$db;";
-    ?>
 
     <?php
-    try {
-        $conProyecto = new PDO($dsn, $user, $pass);
-        echo "<div class=headerConexionSi>";
-        echo "<strong>Conectado a base de datos: $db</strong>";
-        echo "</div>";
-    } catch (Exception $e) {
-        echo "<div class='headerConexionNo'>";
-        die("<strong>Error: </strong>" . $e->getMessage());
-        echo "</div>";
-    }
-    ?>
+    // $result = $conProyecto->query(
+    //     "SELECT id, nombre FROM productos"
+    // );
 
-    <?php
-    $result = $conProyecto->query(
-        "SELECT id, nombre FROM productos"
-    );
-
-    $resultado = $result->fetch(PDO::FETCH_OBJ);
+    // $resultado = $result->fetch(PDO::FETCH_OBJ);
     ?>
 
     <hr>
@@ -59,20 +37,25 @@
             <th>Acciones</th>
         </tr>
         <?php
-        while ($resultado != null) {
+        include "conexion.php";
+        
+        $pdo = Conexion::conectar();
+        $sql = $pdo->query("SELECT id, nombre FROM productos ORDER BY id");
+        // $conexion = $sql->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($sql as $resultado) {
             echo "<tr>";
             echo "<td class='detalle'><a href='' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
-            echo "<td class='codigo'>$resultado->id</td>";
-            echo "<td>$resultado->nombre</td>";
+            echo "<td class='codigo'>".$resultado['id']."</td>";
+            echo "<td>".$resultado['nombre']."</td>";
             echo "<td>
                 <a href='' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
                 <a href='' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
             echo "</tr>";
             echo "</table";
 
-            $resultado = $result->fetch(PDO::FETCH_OBJ);
         }
-        $conProyecto = null;
+        Conexion::desconectar();
         ?>
 
 
