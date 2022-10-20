@@ -12,16 +12,6 @@
 
 <body>
 
-    <?php
-    // $result = $conProyecto->query(
-    //     "SELECT id, nombre FROM productos"
-    // );
-
-    // $resultado = $result->fetch(PDO::FETCH_OBJ);
-    ?>
-
-    <hr>
-
     <h1>Gestión de productos</h1>
 
     <div class="d-grid gap-2">
@@ -49,8 +39,8 @@
             echo "<td class='codigo'>".$resultado['id']."</td>";
             echo "<td>".$resultado['nombre']."</td>";
             echo "<td>
-                <a href='' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
-                <a href='' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
+                <a href='editar.php?id=<?php echo".$resultado['id']."; ?>' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
+                <a href='eliminar.php' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
             echo "</tr>";
             echo "</table";
 
