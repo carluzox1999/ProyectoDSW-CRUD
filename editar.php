@@ -55,7 +55,7 @@ if (null == $id) {
 
         if ($validacion) {
             $pdo = Conexion::conectar();
-            $sql = "UPDATE productos  set nombre = :nombre, nombre_corto = :nombre_corto, descripcion = :descripcion, pvp = :pvp, familia = :familia WHERE id = ?";
+            $sql = "UPDATE productos  SET nombre = :nombre, nombre_corto = :nombre_corto, descripcion = :descripcion, pvp = :pvp, familia = :familia WHERE id = ?";
             $conexion = $pdo->prepare($sql);
             $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select]);
             
