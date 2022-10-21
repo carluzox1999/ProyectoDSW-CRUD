@@ -49,11 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($validacion) {
             $pdo = Conexion::conectar();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?)";
+            $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?);";
             $conexion = $pdo->prepare($sql);
-            $conexion->execute(array($inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select));
-            Conexion::desconectar();
+            $conexion->execute([$inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select]);
+            
             $nuevaURL = "listado.php";
             header('Location: '.$nuevaURL);
         } 
@@ -108,13 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select class="form-control" name="familia">
                     <?php
                         $pdoSelect = Conexion::conectar();
-                        $sqlSelect = $pdoSelect->query("SELECT nombre FROM familias");
+                        $sqlSelect = $pdoSelect->query("SELECT * FROM familias");
                         $sqlSelect->execute();
-                        $data = $sqlSelect->fetchAll();
-
-                        foreach ($data as $valores):
-                        echo '<option value="'.$valores["nombre"].'">'.$valores["nombre"].'</option>';
-                        endforeach;
+                        while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)){
+                            echo '<option value="'.$data -> cod.'">'.$data -> nombre.'</option>';
+                        }
                     ?>
                 </select>
             </div>

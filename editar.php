@@ -1,15 +1,64 @@
 <?php
 require "conexion.php";
 
+// Procesamiento de validaciones
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombreError = null;
+    $nCortoError = null;
+    $precioError = null;
+    $selectError = null;
+    $descripcionError = null;
 
-$pdo = Conexion::conectar();
-$id = $_POST["id"];
+    if (!empty($_POST)) {
+        $validacion = true;
+        $nuevoProducto = false;
+        if (!empty($_POST["nombre"])) {
+            $inputNombre = $_POST['nombre'];
+        } else {
+            $nombreError = 'Nombre erroneo!';
+            $validacion = false;
+        }
 
-$query = $pdo->prepare("SELECT nombre, nombreCorto, descripcion, pvp, familia FROM productos WHERE id = :id");
-$query->execute(["id" => $id]);
-$resultado = $query->fetch(PDO::FETCH_ASSOC);
+        if (!empty($_POST["nombre_corto"])) {
+            $inputNombreCorto = $_POST['nombre_corto'];
+        } else {
+            $nCortoError = 'Nombre corto erroneo!';
+            $validacion = false;
+        }
 
+        if (!empty($_POST["pvp"])) {
+            $inputPrecio = $_POST['pvp'];
+        } else {
+            $precioError = 'Precio erroneo!';
+            $validacion = false;
+        }
 
+        if (!empty($_POST["familia"])) {
+            $select = $_POST['familia'];
+        } else {
+            $selectError = 'Elija opción!';
+            $validacion = false;
+        }
+
+        if (!empty($_POST["descripcion"])) {
+            $txtDescripcion = $_POST['descripcion'];
+        } else {
+            $descripcionError = 'Ponga un texto!';
+            $validacion = false;
+        }
+
+        if ($validacion) {
+            $pdo = Conexion::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE productos SET nombre=:, nombre_corto, descripcion, pvp, familia VALUES(?,?,?,?,?)";
+            $conexion = $pdo->prepare($sql);
+            $conexion->execute(array($inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select));
+            Conexion::desconectar();
+            $nuevaURL = "listado.php";
+            header('Location: '.$nuevaURL);
+        } 
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +70,7 @@ $resultado = $query->fetch(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style2.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <title>Crear producto</title>
+    <title>Editar producto</title>
 </head>
 
 <body>
@@ -29,51 +78,58 @@ $resultado = $query->fetch(PDO::FETCH_ASSOC);
     <h1>Crear Producto</h1>
 
     <div class="grid estilodiv">
-        <form class="row g-3" method="post" action="listado.php" id="formularioCrear" autocomplete="off">
+        <form class="row g-3" method="post" action="editar.php" id="formularioCrear" autocomplete="off">
             <div class="col-md-6">
                 <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="inputNombreCrear" placeholder="Nombre" 
-                value="<?php echo $resultado->nombre ?>">
-            
+                <input type="text" class="form-control" name="nombre" placeholder="Nombre"
+                    value="">
+                <?php if (!empty($nombreError)): ?>
+                <span class="text-danger"><?php echo $nombreError; ?></span>
+                <?php endif; ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Nombre Corto</label>
-                <input type="text" class="form-control" id="inputNombreCortoCrear" placeholder="Nombre Corto" value="<?php echo !empty($inputNombreCorto) ? $inputNombreCorto : ''; ?>">
-                
+                <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto"
+                    value="">
+                <?php if (!empty($nCortoError)): ?>
+                <span class="text-danger"><?php echo $nCortoError; ?></span>
+                <?php endif; ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Precio (€)</label>
-                <input type="number" class="form-control" id="inputPrecioCrear" placeholder="Precio" value="<?php echo !empty($inputPrecio) ? $inputPrecio : ''; ?>">
-                <?php if (!empty($precioError)) : ?>
-                    <span class="text-danger"><?php echo $precioError; ?></span>
+                <input type="number" class="form-control" name="pvp" placeholder="Precio"
+                    value="">
+                <?php if (!empty($precioError)): ?>
+                <span class="text-danger"><?php echo $precioError; ?></span>
                 <?php endif; ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Familia</label>
-                <select class="form-control" id="selectCrear">
+                <select class="form-control" name="familia">
                     <?php
-                    $pdoSelect = Conexion::conectar();
-                    $sqlSelect = $pdoSelect->query("SELECT nombre FROM familias");
-                    $sqlSelect->execute();
-                    $data = $sqlSelect->fetchAll();
+                        $pdoSelect = Conexion::conectar();
+                        $sqlSelect = $pdoSelect->query("SELECT nombre FROM familias");
+                        $sqlSelect->execute();
+                        $data = $sqlSelect->fetchAll();
 
-                    foreach ($data as $valores) :
-                        echo '<option value="' . $valores["nombre"] . '">' . $valores["nombre"] . '</option>';
-                    endforeach;
+                        foreach ($data as $valores):
+                        echo '<option value="'.$valores["nombre"].'">'.$valores["nombre"].'</option>';
+                        endforeach;
                     ?>
                 </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
-                <textarea class="form-control" id="txtDescripcion" rows="5" placeholder="Ingrese una descripción..." value="<?php echo !empty($txtDescripcion) ? $txtDescripcion : ''; ?>">
+                <textarea class="form-control" name="descripcion" rows="5" placeholder="Ingrese una descripción..."
+                    value="?>">
                 </textarea>
-                <?php if (!empty($descripcionError)) : ?>
-                    <span class="text-danger"><?php echo $descripcionError; ?></span>
+                <?php if (!empty($descripcionError)): ?>
+                <span class="text-danger"><?php echo $descripcionError; ?></span>
                 <?php endif; ?>
             </div>
             <!-- <input type="hidden" name="oculto" value="1"> -->
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary">Modificar</button>
             </div>
 
             <div class="d-grid gap-2">
