@@ -53,8 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?)";
             $conexion = $pdo->prepare($sql);
             $conexion->execute(array($inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select));
-            
-    
+            Conexion::desconectar();
+            $nuevaURL = "listado.php";
+            header('Location: '.$nuevaURL);
         } 
     }
 }
@@ -77,11 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Crear Producto</h1>
 
     <div class="grid estilodiv">
-        <form class="row g-3" method="post" action="listado.php" id="formularioCrear" autocomplete="off">
+        <form class="row g-3" method="post" action="crear.php" id="formularioCrear" autocomplete="off">
             <div class="col-md-6">
                 <label class="form-label">Nombre</label>
                 <input type="text" class="form-control" name="nombre" placeholder="Nombre"
-                    value="<?php echo !empty($inputNombreCrear) ? $inputNombreCrear : ''; ?>">
+                    value="<?php echo !empty($inputNombre) ? $inputNombre : ''; ?>">
                 <?php if (!empty($nombreError)): ?>
                 <span class="text-danger"><?php echo $nombreError; ?></span>
                 <?php endif; ?>
