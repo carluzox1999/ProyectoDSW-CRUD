@@ -1,64 +1,82 @@
 <?php
 require "conexion.php";
 
-// Procesamiento de validaciones
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombreError = null;
-    $nCortoError = null;
-    $precioError = null;
-    $selectError = null;
-    $descripcionError = null;
+$id = null;
+if (!empty($_GET['id'])) {
+    $id = $_REQUEST['id'];
+}
 
+if (null == $id) {
+    header("Location: listado.php");
+}
+
+// Procesamiento de validaciones
+    
     if (!empty($_POST)) {
+
+        $nombreError = null;
+        $nCortoError = null;
+        $precioError = null;
+        $selectError = null;
+        $descripcionError = null;
+
+        $nombre = $_POST['nombre'];
+        $nombre_corto = $_POST['nombre_corto'];
+        $pvp = $_POST['pvp'];
+        $select = $_POST['familia'];
+        $descripcion = $_POST['descripcion'];
+    
+        // Validacion
         $validacion = true;
-        $nuevoProducto = false;
-        if (!empty($_POST["nombre"])) {
-            $inputNombre = $_POST['nombre'];
-        } else {
+        if (!empty($nombre)) {
             $nombreError = 'Nombre erroneo!';
             $validacion = false;
         }
 
-        if (!empty($_POST["nombre_corto"])) {
-            $inputNombreCorto = $_POST['nombre_corto'];
-        } else {
+        if (!empty($nombre_corto)) {
             $nCortoError = 'Nombre corto erroneo!';
             $validacion = false;
         }
 
-        if (!empty($_POST["pvp"])) {
-            $inputPrecio = $_POST['pvp'];
-        } else {
+        if (!empty($pvp)) {
             $precioError = 'Precio erroneo!';
             $validacion = false;
         }
 
-        if (!empty($_POST["familia"])) {
-            $select = $_POST['familia'];
-        } else {
+        if (!empty($select)) {
             $selectError = 'Elija opción!';
             $validacion = false;
         }
 
-        if (!empty($_POST["descripcion"])) {
-            $txtDescripcion = $_POST['descripcion'];
-        } else {
+        if (!empty($descripcion)) {
             $descripcionError = 'Ponga un texto!';
             $validacion = false;
         }
 
         if ($validacion) {
             $pdo = Conexion::conectar();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE productos SET nombre=:, nombre_corto, descripcion, pvp, familia VALUES(?,?,?,?,?)";
+            $sql = "UPDATE productos  set nombre = :nombre, nombre_corto = :nombre_corto, descripcion = :descripcion, pvp = :pvp, familia = :familia WHERE id = ?";
             $conexion = $pdo->prepare($sql);
-            $conexion->execute(array($inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select));
-            Conexion::desconectar();
+            $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select]);
+            
             $nuevaURL = "listado.php";
             header('Location: '.$nuevaURL);
         } 
+    } 
+    else {
+        $pdo = Conexion::conectar();
+        $sql = "SELECT * FROM productos where id = ?";
+        $conexion = $pdo->prepare($sql);
+        $conexion->execute([$id]);
+        $data = $conexion->fetch(PDO::FETCH_OBJ);
+        $nombre = $data->nombre;
+        $nombre_corto = $data->nombre_corto;
+        $pvp = $data->pvp;
+        $select = $data->familia;
+        $descripcion = $data->descripcion;
+        
+
     }
-}
 ?>
 
 <!DOCTYPE html>
@@ -70,19 +88,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style2.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <title>Editar producto</title>
+    <title>Crear producto</title>
 </head>
 
 <body>
 
-    <h1>Crear Producto</h1>
+    <h1>Acrualizar Producto</h1>
 
     <div class="grid estilodiv">
-        <form class="row g-3" method="post" action="editar.php" id="formularioCrear" autocomplete="off">
+        <form class="row g-3" method="post" action="editar.php" id="formularioActualizar" autocomplete="off">
             <div class="col-md-6">
                 <label class="form-label">Nombre</label>
                 <input type="text" class="form-control" name="nombre" placeholder="Nombre"
-                    value="">
+                    value="<?php echo !empty($nombre) ? $nombre : ''; ?>">
                 <?php if (!empty($nombreError)): ?>
                 <span class="text-danger"><?php echo $nombreError; ?></span>
                 <?php endif; ?>
@@ -90,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-md-6">
                 <label class="form-label">Nombre Corto</label>
                 <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto"
-                    value="">
+                    value="<?php echo !empty($nombre_corto) ? $nombre_corto : ''; ?>">
                 <?php if (!empty($nCortoError)): ?>
                 <span class="text-danger"><?php echo $nCortoError; ?></span>
                 <?php endif; ?>
@@ -98,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-md-6">
                 <label class="form-label">Precio (€)</label>
                 <input type="number" class="form-control" name="pvp" placeholder="Precio"
-                    value="">
+                    value="<?php echo !empty($pvp) ? $pvp : ''; ?>">
                 <?php if (!empty($precioError)): ?>
                 <span class="text-danger"><?php echo $precioError; ?></span>
                 <?php endif; ?>
@@ -108,20 +126,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select class="form-control" name="familia">
                     <?php
                         $pdoSelect = Conexion::conectar();
-                        $sqlSelect = $pdoSelect->query("SELECT nombre FROM familias");
+                        $sqlSelect = $pdoSelect->query("SELECT * FROM familias");
                         $sqlSelect->execute();
-                        $data = $sqlSelect->fetchAll();
-
-                        foreach ($data as $valores):
-                        echo '<option value="'.$valores["nombre"].'">'.$valores["nombre"].'</option>';
-                        endforeach;
+                        while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)){
+                            echo '<option value="'.$data -> cod.'">'.$data -> nombre.'</option>';
+                        }
                     ?>
                 </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
                 <textarea class="form-control" name="descripcion" rows="5" placeholder="Ingrese una descripción..."
-                    value="?>">
+                    value="<?php echo !empty($descripcion) ? $descripcion : ''; ?>">
                 </textarea>
                 <?php if (!empty($descripcionError)): ?>
                 <span class="text-danger"><?php echo $descripcionError; ?></span>
@@ -129,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <!-- <input type="hidden" name="oculto" value="1"> -->
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Modificar</button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
 
             <div class="d-grid gap-2">

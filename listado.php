@@ -30,7 +30,7 @@
         include "conexion.php";
         
         $pdo = Conexion::conectar();
-        $sql = $pdo->query("SELECT id, nombre FROM productos ORDER BY id");
+        $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
         // $conexion = $sql->fetchAll(PDO::FETCH_OBJ);
 
         foreach ($sql as $resultado) {
@@ -39,7 +39,7 @@
             echo "<td class='codigo'><b>".$resultado['id']."</b></td>";
             echo "<td><b>".$resultado['nombre']."<b></td>";
             echo "<td>
-                <a href='editar.php?id=<?php echo".$resultado['id']."; ?>' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
+                <a href='editar.php?id=".$resultado['id']."' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
                 <a href='eliminar.php' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
             echo "</tr>";
             echo "</table";
