@@ -55,7 +55,7 @@ if (null == $id) {
 
         if ($validacion) {
             $pdo = Conexion::conectar();
-            $sql = "UPDATE productos  SET nombre = :nombre, nombre_corto = :nombre_corto, descripcion = :descripcion, pvp = :pvp, familia = :familia WHERE id = ?";
+            $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
             $conexion = $pdo->prepare($sql);
             $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select]);
             
@@ -93,7 +93,7 @@ if (null == $id) {
 
 <body>
 
-    <h1>Acrualizar Producto</h1>
+    <h1>Actualizar Producto</h1>
 
     <div class="grid estilodiv">
         <form class="row g-3" method="post" action="editar.php" id="formularioActualizar" autocomplete="off">
@@ -136,9 +136,7 @@ if (null == $id) {
             </div>
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
-                <textarea class="form-control" name="descripcion" rows="5" placeholder="Ingrese una descripción..."
-                    value="<?php echo !empty($descripcion) ? $descripcion : ''; ?>">
-                </textarea>
+                <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
                 <?php if (!empty($descripcionError)): ?>
                 <span class="text-danger"><?php echo $descripcionError; ?></span>
                 <?php endif; ?>

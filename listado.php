@@ -35,12 +35,12 @@
 
         foreach ($sql as $resultado) {
             echo "<tr>";
-            echo "<td class='detalle'><a href='' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
+            echo "<td><a href='detalle.php?id=".$resultado['id']."' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
             echo "<td class='codigo'><b>".$resultado['id']."</b></td>";
             echo "<td><b>".$resultado['nombre']."<b></td>";
             echo "<td>
                 <a href='editar.php?id=".$resultado['id']."' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
-                <a href='eliminar.php' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
+                <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
             echo "</tr>";
             echo "</table";
 

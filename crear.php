@@ -117,9 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
-                <textarea class="form-control" name="descripcion" rows="5" placeholder="Ingrese una descripción..."
-                    value="<?php echo !empty($txtDescripcion) ? $txtDescripcion : ''; ?>">
-                </textarea>
+                <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..." value="<?php echo !empty($txtDescripcion) ? $txtDescripcion : ''; ?>"></textarea>
                 <?php if (!empty($descripcionError)): ?>
                 <span class="text-danger"><?php echo $descripcionError; ?></span>
                 <?php endif; ?>
