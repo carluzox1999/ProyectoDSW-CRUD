@@ -17,6 +17,7 @@ if(null == $id){
     $conexion = $pdo->prepare($sql);
     $conexion->execute([$id]);
     $data = $conexion->fetch(PDO::FETCH_OBJ);
+    Conexion::desconectar();
 }
 ?>
 

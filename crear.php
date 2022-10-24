@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?);";
             $conexion = $pdo->prepare($sql);
             $conexion->execute([$inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select]);
-            
+            Conexion::desconectar();
             $nuevaURL = "listado.php";
             header('Location: '.$nuevaURL);
         } 
@@ -122,7 +122,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span class="text-danger"><?php echo $descripcionError; ?></span>
                 <?php endif; ?>
             </div>
-            <!-- <input type="hidden" name="oculto" value="1"> -->
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

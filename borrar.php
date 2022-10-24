@@ -16,7 +16,7 @@ if(!empty($_POST))
     $sql = "DELETE FROM productos where id = ?;";
     $conexion = $pdo->prepare($sql);
     $conexion->execute([$id]);
-
+    Conexion::desconectar();
     $nuevaURL = "listado.php";
     header('Location: '.$nuevaURL);
 }

@@ -31,7 +31,6 @@
         
         $pdo = Conexion::conectar();
         $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
-        // $conexion = $sql->fetchAll(PDO::FETCH_OBJ);
 
         foreach ($sql as $resultado) {
             echo "<tr>";

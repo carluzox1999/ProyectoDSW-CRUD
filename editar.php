@@ -18,9 +18,8 @@ if (!empty($_POST)) {
     $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
     $conexion = $pdo->prepare($sql);
     $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
-    // echo "$conexion";
-    $nuevaURL = "listado.php";
     Conexion::desconectar();
+    $nuevaURL = "listado.php";
     header('Location: ' . $nuevaURL);
     
 }
@@ -34,7 +33,6 @@ $nombre_corto = $data->nombre_corto;
 $pvp = $data->pvp;
 $select = $data->familia;
 $descripcion = $data->descripcion;
-
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +99,7 @@ $descripcion = $data->descripcion;
 
     <script src="./js/bootstrap.min.js"></script>
     <?php
-    // Conexion::desconectar();
+    Conexion::desconectar();
     ?>
 </body>
 
