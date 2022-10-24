@@ -1,16 +1,13 @@
 <?php
 require "conexion.php";
-// global $id;
 
 if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
 }
 
-// Procesamiento de validaciones
-
 if (!empty($_POST)) {
 
-    // $id = $_POST['id'];
+    $id = $_POST['id'];
     $nombre = $_POST['nombre'];
     $nombre_corto = $_POST['nombre_corto'];
     $pvp = $_POST['pvp'];
@@ -20,14 +17,12 @@ if (!empty($_POST)) {
     $pdo = Conexion::conectar();
     $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
     $conexion = $pdo->prepare($sql);
-
-    echo "$sql";
-    
     $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
-    echo "$conexion";
+    // echo "$conexion";
     $nuevaURL = "listado.php";
-    header('Location: ' . $nuevaURL);
     Conexion::desconectar();
+    header('Location: ' . $nuevaURL);
+    
 }
 $pdo = Conexion::conectar();
 $sql = "SELECT * FROM productos where id = ?;";
@@ -94,15 +89,10 @@ $descripcion = $data->descripcion;
                 <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
 
             </div>
-            <!-- <input type="hidden" name="oculto" value="1"> -->
+            <input type='hidden' name='id' value='<?=$id?>'>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
-
-            <div class="d-grid gap-2">
-                <button type="reset" class="btn btn-success">Limpiar</button>
-            </div>
-
             <div class="d-grid gap-2">
                 <a href="listado.php" class="btn btn-secondary">Volver</a>
             </div>
