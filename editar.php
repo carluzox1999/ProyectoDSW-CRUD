@@ -1,12 +1,12 @@
 <?php
 require "conexion.php";
-
+// echo $_GET["familia"];
 if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
 }
 
 if (!empty($_POST)) {
-
+    
     $id = $_POST['id'];
     $nombre = $_POST['nombre'];
     $nombre_corto = $_POST['nombre_corto'];
@@ -72,11 +72,21 @@ $descripcion = $data->descripcion;
                 <label class="form-label">Familia</label>
                 <select class="form-control" name="familia">
                     <?php
+                    
                     $pdoSelect = Conexion::conectar();
-                    $sqlSelect = $pdoSelect->query("SELECT * FROM familias");
+                    $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
                     $sqlSelect->execute();
+                    
+                    $sqlFamilia = $pdoSelect->prepare("SELECT * FROM familias WHERE cod=?;");
+                    $sqlFamilia->execute([$_GET['familia']]);
+                    $dataF = $sqlFamilia->fetch(PDO::FETCH_OBJ);
+                    echo '<option selected value="' . $dataF->cod . '">' . $dataF->nombre . '</option>';
+
                     while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
-                        echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
+                        if($data -> cod != $dataF -> cod)
+                            echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
+                        
+                        
                     }
                     Conexion::desconectar();
                     ?>

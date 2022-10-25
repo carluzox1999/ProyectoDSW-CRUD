@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select class="form-control" name="familia">
                     <?php
                         $pdoSelect = Conexion::conectar();
-                        $sqlSelect = $pdoSelect->query("SELECT * FROM familias");
+                        $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
                         $sqlSelect->execute();
                         while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)){
                             echo '<option value="'.$data -> cod.'">'.$data -> nombre.'</option>';
