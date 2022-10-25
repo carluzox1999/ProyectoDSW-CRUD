@@ -39,7 +39,8 @@
             echo "<td><b>".$resultado['nombre']."<b></td>";
             echo "<td>
                 <a href='editar.php?id=".$resultado['id']."&familia=".$resultado['familia']."' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
-                <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger btn-block botonExtra'>Borrar</a></td>";
+                <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger btn-block botonExtra'>Borrar</a>
+                <a href='muevestock.php?id=".$resultado['id']."' class='btn btn-secondary btn-block botonExtra'>Mover Stock</a></td>";
                 echo "</tr>";
             echo "</table";
 
