@@ -105,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-md-6">
                 <label class="form-label">Familia</label>
                 <select class="form-control" name="familia">
+                    <option value="<?php echo !empty($select) ? $select : ''; ?>">Seleccione Opcion</option>
                     <?php
                         $pdoSelect = Conexion::conectar();
                         $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
@@ -113,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo '<option value="'.$data -> cod.'">'.$data -> nombre.'</option>';
                         }
                     ?>
+                    <span class="text-danger"><?php echo $selectError; ?></span>
                 </select>
             </div>
             <div class="mb-3">
