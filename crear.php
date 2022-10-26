@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             } catch (Exception $e) {
                 $pdo->rollback();
-                echo "Lista no completada: " . $error->getMessage();
+                echo "Lista no completada: " . $e->getMessage();
             }
         } 
     }

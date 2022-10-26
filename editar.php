@@ -28,7 +28,7 @@ if (!empty($_POST)) {
 
     } catch (Exception $e) {
         $pdo->rollback();
-        echo "Lista no completada: " . $error->getMessage();
+        echo "Lista no completada: " . $e->getMessage();
     }
 
     
@@ -49,9 +49,10 @@ try {
     $pvp = $data->pvp;
     $select = $data->familia;
     $descripcion = $data->descripcion;
+    
 } catch (Exception $e) {
     $pdo->rollback();
-    echo "Lista no completada: " . $error->getMessage();
+    echo "Lista no completada: " . $e->getMessage();
 }
 ?>
 
@@ -64,7 +65,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style2.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <title>Crear producto</title>
+    <title>Editar producto</title>
 </head>
 
 <body>

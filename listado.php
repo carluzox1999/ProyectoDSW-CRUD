@@ -37,7 +37,7 @@
             $pdo->commit();
         } catch (Exception $e) {
             $pdo->rollback();
-            echo "Lista no completada: " . $error->getMessage();
+            echo "Lista no completada: " . $e->getMessage();
         }
 
         // $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
@@ -48,9 +48,11 @@
             echo "<td class='codigo'><b>".$resultado['id']."</b></td>";
             echo "<td><b>".$resultado['nombre']."<b></td>";
             echo "<td>
-                <a href='editar.php?id=".$resultado['id']."&familia=".$resultado['familia']."' class='btn btn-warning btn-block botonExtra'>Actualizar</a>
-                <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger btn-block botonExtra'>Borrar</a>
-                <a href='muevestock.php?id=".$resultado['id']."' class='btn btn-secondary btn-block botonExtra'>Mover Stock</a></td>";
+                <div class='d-grid gap-2 d-md-block'>
+                    <a href='editar.php?id=".$resultado['id']."&familia=".$resultado['familia']."' class='btn btn-warning botonExtra' type'button'>Actualizar</a>
+                    <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger botonExtra' type'button'>Borrar</a>
+                </div>
+                <a href='muevestock.php?id=".$resultado['id']."' class='btn btn-secondary d-grid gap-2'>Mover Stock</a></td>";
                 echo "</tr>";
             echo "</table";
 

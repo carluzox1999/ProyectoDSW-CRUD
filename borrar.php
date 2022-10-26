@@ -26,7 +26,7 @@ if(!empty($_POST))
 
     } catch (Exception $e) {
         $pdo->rollback();
-        echo "Lista no completada: " . $error->getMessage();
+        echo "Lista no completada: " . $e->getMessage();
     }
 }
 ?>
