@@ -48,13 +48,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($validacion) {
-            $pdo = Conexion::conectar();
-            $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?);";
-            $conexion = $pdo->prepare($sql);
-            $conexion->execute([$inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select]);
-            Conexion::desconectar();
-            $nuevaURL = "listado.php";
-            header('Location: '.$nuevaURL);
+            try {
+                $pdo = Conexion::conectar();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->beginTransaction();
+                $sql = "INSERT INTO productos (nombre, nombre_corto, descripcion, pvp, familia) VALUES(?,?,?,?,?);";
+                $pdo->commit();
+                $conexion = $pdo->prepare($sql);
+                $conexion->execute([$inputNombre, $inputNombreCorto, $txtDescripcion, $inputPrecio, $select]);
+                Conexion::desconectar();
+                $nuevaURL = "listado.php";
+                header('Location: '.$nuevaURL);
+
+            } catch (Exception $e) {
+                $pdo->rollback();
+                echo "Lista no completada: " . $error->getMessage();
+            }
         } 
     }
 }

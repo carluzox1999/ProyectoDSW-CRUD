@@ -14,25 +14,45 @@ if (!empty($_POST)) {
     $select = $_POST['familia'];
     $descripcion = $_POST['descripcion'];
 
-    $pdo = Conexion::conectar();
-    $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
-    $conexion = $pdo->prepare($sql);
-    $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
-    Conexion::desconectar();
-    $nuevaURL = "listado.php";
-    header('Location: ' . $nuevaURL);
+    try {
+        $pdo = Conexion::conectar();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->beginTransaction();
+        $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
+        $pdo->commit();
+        $conexion = $pdo->prepare($sql);
+        $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
+        Conexion::desconectar();
+        $nuevaURL = "listado.php";
+        header('Location: ' . $nuevaURL);
+
+    } catch (Exception $e) {
+        $pdo->rollback();
+        echo "Lista no completada: " . $error->getMessage();
+    }
+
+    
     
 }
-$pdo = Conexion::conectar();
-$sql = "SELECT * FROM productos where id = ?;";
-$conexion = $pdo->prepare($sql);
-$conexion->execute([$id]);
-$data = $conexion->fetch(PDO::FETCH_OBJ);
-$nombre = $data->nombre;
-$nombre_corto = $data->nombre_corto;
-$pvp = $data->pvp;
-$select = $data->familia;
-$descripcion = $data->descripcion;
+
+try {
+    $pdo = Conexion::conectar();
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->beginTransaction();
+    $sql = "SELECT * FROM productos where id = ?;";
+    $pdo->commit();
+    $conexion = $pdo->prepare($sql);
+    $conexion->execute([$id]);
+    $data = $conexion->fetch(PDO::FETCH_OBJ);
+    $nombre = $data->nombre;
+    $nombre_corto = $data->nombre_corto;
+    $pvp = $data->pvp;
+    $select = $data->familia;
+    $descripcion = $data->descripcion;
+} catch (Exception $e) {
+    $pdo->rollback();
+    echo "Lista no completada: " . $error->getMessage();
+}
 ?>
 
 <!DOCTYPE html>

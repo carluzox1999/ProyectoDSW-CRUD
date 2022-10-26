@@ -12,13 +12,22 @@ if(!empty($_POST))
 {
     $id = $_POST['id'];
 
-    $pdo = Conexion::conectar();
-    $sql = "DELETE FROM productos where id = ?;";
-    $conexion = $pdo->prepare($sql);
-    $conexion->execute([$id]);
-    Conexion::desconectar();
-    $nuevaURL = "listado.php";
-    header('Location: '.$nuevaURL);
+    try {
+        $pdo = Conexion::conectar();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->beginTransaction();
+        $sql = "DELETE FROM productos where id = ?;";
+        $pdo->commit();
+        $conexion = $pdo->prepare($sql);
+        $conexion->execute([$id]);
+        Conexion::desconectar();
+        $nuevaURL = "listado.php";
+        header('Location: '.$nuevaURL);
+
+    } catch (Exception $e) {
+        $pdo->rollback();
+        echo "Lista no completada: " . $error->getMessage();
+    }
 }
 ?>
 

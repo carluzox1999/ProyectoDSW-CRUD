@@ -28,9 +28,19 @@
         </tr>
         <?php
         include "conexion.php";
-        
-        $pdo = Conexion::conectar();
-        $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
+
+        try {
+            $pdo = Conexion::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->beginTransaction();
+            $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
+            $pdo->commit();
+        } catch (Exception $e) {
+            $pdo->rollback();
+            echo "Lista no completada: " . $error->getMessage();
+        }
+
+        // $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
 
         foreach ($sql as $resultado) {
             echo "<tr>";
