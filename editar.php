@@ -1,6 +1,6 @@
 <?php
 require "conexion.php";
-// echo $_GET["familia"];
+
 if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
 }
@@ -30,9 +30,6 @@ if (!empty($_POST)) {
         $pdo->rollback();
         echo "Lista no completada: " . $e->getMessage();
     }
-
-    
-    
 }
 
 try {

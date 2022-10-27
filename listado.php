@@ -40,8 +40,6 @@
             echo "Lista no completada: " . $e->getMessage();
         }
 
-        // $sql = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
-
         foreach ($sql as $resultado) {
             echo "<tr>";
             echo "<td><a href='detalle.php?id=".$resultado['id']."' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
