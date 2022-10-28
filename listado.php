@@ -50,7 +50,7 @@
                     <a href='editar.php?id=".$resultado['id']."&familia=".$resultado['familia']."' class='btn btn-warning botonExtra' type'button'>Actualizar</a>
                     <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger botonExtra' type'button'>Borrar</a>
                 </div>
-                <a href='muevestock.php?id=".$resultado['id']."' class='btn btn-secondary d-grid gap-2'>Mover Stock</a></td>";
+                <a href='muevestock.php?producto=".$resultado['id']."' class='btn btn-secondary d-grid gap-2'>Mover Stock</a></td>";
                 echo "</tr>";
             echo "</table";
 
