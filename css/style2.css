@@ -30,6 +30,10 @@ h1{
     padding: 5px 10px 5px 10px;
 }
 
+th{
+    align-items: center;
+}
+
 @media (max-width: 300px) {
     #contenedorHijo {
         margin-left: 10%;
