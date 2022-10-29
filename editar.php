@@ -6,7 +6,7 @@ if (!empty($_GET['id'])) {
 }
 
 if (!empty($_POST)) {
-    
+
     $id = $_POST['id'];
     $nombre = $_POST['nombre'];
     $nombre_corto = $_POST['nombre_corto'];
@@ -25,7 +25,6 @@ if (!empty($_POST)) {
         Conexion::desconectar();
         $nuevaURL = "listado.php";
         header('Location: ' . $nuevaURL);
-
     } catch (Exception $e) {
         $pdo->rollback();
         echo "Lista no completada: " . $e->getMessage();
@@ -46,7 +45,6 @@ try {
     $pvp = $data->pvp;
     $select = $data->familia;
     $descripcion = $data->descripcion;
-    
 } catch (Exception $e) {
     $pdo->rollback();
     echo "Lista no completada: " . $e->getMessage();
@@ -90,21 +88,19 @@ try {
                 <label class="form-label">Familia</label>
                 <select class="form-control" name="familia">
                     <?php
-                    
+
                     $pdoSelect = Conexion::conectar();
                     $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
                     $sqlSelect->execute();
-                    
+
                     $sqlFamilia = $pdoSelect->prepare("SELECT * FROM familias WHERE cod=?;");
                     $sqlFamilia->execute([$_GET['familia']]);
                     $dataF = $sqlFamilia->fetch(PDO::FETCH_OBJ);
                     echo '<option selected value="' . $dataF->cod . '">' . $dataF->nombre . '</option>';
 
                     while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
-                        if($data -> cod != $dataF -> cod)
+                        if ($data->cod != $dataF->cod)
                             echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
-                        
-                        
                     }
                     Conexion::desconectar();
                     ?>
@@ -115,7 +111,7 @@ try {
                 <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
 
             </div>
-            <input type='hidden' name='id' value='<?=$id?>'>
+            <input type='hidden' name='id' value='<?= $id ?>'>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>

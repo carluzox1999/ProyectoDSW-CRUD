@@ -42,18 +42,17 @@
 
         foreach ($sql as $resultado) {
             echo "<tr>";
-            echo "<td><a href='detalle.php?id=".$resultado['id']."' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
-            echo "<td class='codigo'><b>".$resultado['id']."</b></td>";
-            echo "<td><b>".$resultado['nombre']."<b></td>";
+            echo "<td><a href='detalle.php?id=" . $resultado['id'] . "' class='btn btn-info btn-block botonInfo'>Detalle</a></td>";
+            echo "<td class='codigo'><b>" . $resultado['id'] . "</b></td>";
+            echo "<td><b>" . $resultado['nombre'] . "<b></td>";
             echo "<td>
                 <div class='d-grid gap-2 d-md-block'>
-                    <a href='editar.php?id=".$resultado['id']."&familia=".$resultado['familia']."' class='btn btn-warning botonExtra' type'button'>Actualizar</a>
-                    <a href='borrar.php?id=".$resultado['id']."' class='btn btn-danger botonExtra' type'button'>Borrar</a>
+                    <a href='editar.php?id=" . $resultado['id'] . "&familia=" . $resultado['familia'] . "' class='btn btn-warning botonExtra' type'button'>Actualizar</a>
+                    <a href='borrar.php?id=" . $resultado['id'] . "' class='btn btn-danger botonExtra' type'button'>Borrar</a>
                 </div>
-                <a href='muevestock.php?producto=".$resultado['id']."' class='btn btn-secondary d-grid gap-2'>Mover Stock</a></td>";
-                echo "</tr>";
+                <a href='muevestock.php?producto=" . $resultado['id'] . "' class='btn btn-secondary d-grid gap-2'>Mover Stock</a></td>";
+            echo "</tr>";
             echo "</table";
-
         }
         Conexion::desconectar();
         ?>

@@ -3,15 +3,14 @@ require "conexion.php";
 
 $id = null;
 
-if(!empty($_GET['id']))
-{
+if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
 }
 
-if(null == $id){
+if (null == $id) {
     $nuevaURL = "listado.php";
-    header('Location: '.$nuevaURL);
-}else {
+    header('Location: ' . $nuevaURL);
+} else {
     $pdo = Conexion::conectar();
     $sql = "SELECT * FROM productos where id = ?;";
     $conexion = $pdo->prepare($sql);
@@ -36,73 +35,73 @@ if(null == $id){
 <body>
 
     <div class="container">
-    <div class="span10 offset1">
-        <div class="card">
-            <div class="card-header" id="contenedorPadre">
-                <h3 class="well">Información del Producto</h3>
-                <div class="idData" id="contenedorHijo">
-                    <label class="carousel-inner">
-                    <?php echo $data->id; ?>
+        <div class="span10 offset1">
+            <div class="card">
+                <div class="card-header" id="contenedorPadre">
+                    <h3 class="well">Información del Producto</h3>
+                    <div class="idData" id="contenedorHijo">
+                        <label class="carousel-inner">
+                            <?php echo $data->id; ?>
+                    </div>
+
+                    </label>
                 </div>
-                
-            </label>
-            </div>
-            
-            <div class="container">
-                <div class="form-horizontal">
-                    <div class="control-group">
-                        <label class="control-label">Nombre</label>
-                        <div class="controls form-control">
-                            <label class="carousel-inner">
-                                <?php echo $data->nombre; ?>
-                            </label>
-                        </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label class="control-label">Nombre corto</label>
-                        <div class="controls form-control disabled">
-                            <label class="carousel-inner">
-                                <?php echo $data->nombre_corto; ?>
-                            </label>
+                <div class="container">
+                    <div class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label">Nombre</label>
+                            <div class="controls form-control">
+                                <label class="carousel-inner">
+                                    <?php echo $data->nombre; ?>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label class="control-label">PVP</label>
-                        <div class="controls form-control disabled">
-                            <label class="carousel-inner">
-                                <?php echo $data->pvp; ?>
-                            </label>
+                        <div class="control-group">
+                            <label class="control-label">Nombre corto</label>
+                            <div class="controls form-control disabled">
+                                <label class="carousel-inner">
+                                    <?php echo $data->nombre_corto; ?>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label class="control-label">Familia</label>
-                        <div class="controls form-control disabled">
-                            <label class="carousel-inner">
-                                <?php echo $data->familia; ?>
-                            </label>
+                        <div class="control-group">
+                            <label class="control-label">PVP</label>
+                            <div class="controls form-control disabled">
+                                <label class="carousel-inner">
+                                    <?php echo $data->pvp; ?>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label class="control-label">Descripción</label>
-                        <div class="controls form-check disabled">
-                            <label class="carousel-inner">
-                                <?php echo $data->descripcion; ?>
-                            </label>
+                        <div class="control-group">
+                            <label class="control-label">Familia</label>
+                            <div class="controls form-control disabled">
+                                <label class="carousel-inner">
+                                    <?php echo $data->familia; ?>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <br/>
-                    <div class="d-grid gap-2">
-                    <a href="listado.php" class="btn btn-secondary">Volver</a>
+
+                        <div class="control-group">
+                            <label class="control-label">Descripción</label>
+                            <div class="controls form-check disabled">
+                                <label class="carousel-inner">
+                                    <?php echo $data->descripcion; ?>
+                                </label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="d-grid gap-2">
+                            <a href="listado.php" class="btn btn-secondary">Volver</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script src="./js/bootstrap.min.js"></script>
 </body>

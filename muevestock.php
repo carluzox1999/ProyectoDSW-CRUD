@@ -34,7 +34,7 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
     <div class="d-grid gap-2">
         <a href="listado.php" class="btn btn-secondary btn-block boton">Volver</a>
     </div>
-    <hr/>
+    <hr />
 
     <h1>Mover Stock</h1>
 
@@ -53,8 +53,8 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
             <th>Mover Stock</th>
         </tr>
         <?php
-        if (!empty($_GET)&(count($_GET)<2)) {
-            
+        if (!empty($_GET) & (count($_GET) < 2)) {
+
             try {
                 $pdo = Conexion::conectar();
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -63,57 +63,55 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
                 $pdo->commit();
             } catch (Exception $e) {;
                 echo "Lista no completada: " . $e->getMessage();
-                
             }
 
             foreach ($sql as $resultado) {
-                    echo "<tr>";
-                        echo "<form class='row g-3' method='get' action='muevestock.php' autocomplete='off'>";
-                            echo "<td><b>".$resultado['nombre']."<b></td>";
-                            echo "<td><b>".$resultado['unidades']."<b></td>";
-                            echo "<td>
+                echo "<tr>";
+                echo "<form class='row g-3' method='get' action='muevestock.php' autocomplete='off'>";
+                echo "<td><b>" . $resultado['nombre'] . "<b></td>";
+                echo "<td><b>" . $resultado['unidades'] . "<b></td>";
+                echo "<td>
                                     <select class='form-control' name='destino'>
                                         <option>Seleccione Opción</option>";
 
-                                        $pdoTienda = Conexion::conectar();
-                                        $sqlTienda = $pdoTienda->query('SELECT id, nombre FROM tiendas');
-                                        $sqlTienda->execute();
-                                        while ($data = $sqlTienda->fetch(PDO::FETCH_OBJ)) {
-                                            echo "<option value= '".$data->id . "'>".$data->nombre . "</option>";
-                                        }
-                                        Conexion::desconectar();
-                                    echo "</select>";
-                                echo "</td>";
-                            echo "<td>
+                $pdoTienda = Conexion::conectar();
+                $sqlTienda = $pdoTienda->query('SELECT id, nombre FROM tiendas');
+                $sqlTienda->execute();
+                while ($data = $sqlTienda->fetch(PDO::FETCH_OBJ)) {
+                    echo "<option value= '" . $data->id . "'>" . $data->nombre . "</option>";
+                }
+                Conexion::desconectar();
+                echo "</select>";
+                echo "</td>";
+                echo "<td>
                                     <select class='form-control' name='unidades'>
                                         <option>Seleccione Opción</option>";
 
-                                    $pdo = Conexion::conectar();
-                                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    $pdo->beginTransaction();
-                                    $sql = "SELECT * FROM stocks;";
-                                    $pdo->commit();
-                                    $conexion = $pdo->prepare($sql);
-                                    $conexion->execute();
-                                    $data = $conexion->fetch(PDO::FETCH_OBJ);
-                                    $unidades = $data->unidades;
+                $pdo = Conexion::conectar();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->beginTransaction();
+                $sql = "SELECT * FROM stocks;";
+                $pdo->commit();
+                $conexion = $pdo->prepare($sql);
+                $conexion->execute();
+                $data = $conexion->fetch(PDO::FETCH_OBJ);
+                $unidades = $data->unidades;
 
-                                    for ($i = 1; $i<=$unidades; $i++){
-                                        echo '<option value="' . $i . '">' . $i.' unidades' . '</option>';
-                                    }
-                                    Conexion::desconectar();
-                            echo "</select>";
-                            echo "</td>";
-                            echo "<input hidden name='tienda' value='".$resultado["id"]."''>";    
-                            echo "<input hidden name='nombre' value='".$resultado["nombre"]."' '>";  
-                            echo "<input hidden name='producto' value='".$id."' '>";       
-                            echo "<td><button type='submit' class='btn btn-primary'>Mover Stock</button></td>";                
-                        echo "</form>";
-                    echo "</tr>";
+                for ($i = 1; $i <= $unidades; $i++) {
+                    echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
+                }
+                Conexion::desconectar();
+                echo "</select>";
+                echo "</td>";
+                echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
+                echo "<input hidden name='nombre' value='" . $resultado["nombre"] . "' '>";
+                echo "<input hidden name='producto' value='" . $id . "' '>";
+                echo "<td><button type='submit' class='btn btn-primary'>Mover Stock</button></td>";
+                echo "</form>";
+                echo "</tr>";
                 echo "</table";
             }
-
-        } else{
+        } else {
             $nombre = $_GET['nombre'];
             $unidades = $_GET['unidades'];
             $tienda = $_GET['tienda'];
@@ -128,7 +126,7 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
 
         ?>
 
-    <script src="./js/bootstrap.min.js"></script>
+        <script src="./js/bootstrap.min.js"></script>
 </body>
 
 </html>

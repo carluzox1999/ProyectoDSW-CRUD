@@ -3,13 +3,11 @@ require "conexion.php";
 
 $id = 0;
 
-if(!empty($_GET['id']))
-{
+if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
 }
 
-if(!empty($_POST))
-{
+if (!empty($_POST)) {
     $id = $_POST['id'];
 
     try {
@@ -22,8 +20,7 @@ if(!empty($_POST))
         $conexion->execute([$id]);
         Conexion::desconectar();
         $nuevaURL = "listado.php";
-        header('Location: '.$nuevaURL);
-
+        header('Location: ' . $nuevaURL);
     } catch (Exception $e) {
         $pdo->rollback();
         echo "Lista no completada: " . $e->getMessage();
@@ -49,12 +46,12 @@ if(!empty($_POST))
 
     <div class="grid estilodiv">
         <form class="form-horizontal" method="post" action="borrar.php" id="formularioBorrar" autocomplete="off">
-            <input type="hidden" name="id" value="<?php echo $id;?>" />    
+            <input type="hidden" name="id" value="<?php echo $id; ?>" />
             <div class="alert alert-danger">¿Eliminar Producto?</div>
             <div class="form-actions">
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Borrar</button>
-            </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Borrar</button>
+                </div>
                 <div class="d-grid gap-2">
                     <a href="listado.php" class="btn btn-secondary">No</a>
                 </div>
