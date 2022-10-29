@@ -7,18 +7,11 @@ h1{
     text-align: center;
 }
 
-.botonExtra{
-    margin-bottom: 10px;
-}
-
 @media (max-width: 800px) {
     .codigo {
      display: none;
     }
 
-    .botonExtra{
-        margin: 10px 40px;
-    }
 }
 
 @media (max-width: 300px) {
@@ -30,9 +23,6 @@ h1{
      display: none;
     }
 
-    .botonExtra{
-        margin: 10px 40px;
-    }
   }
 
 tr th{

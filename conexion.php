@@ -7,9 +7,7 @@
         private static $db = "proyecto";
         private static $user = "carlos";
         private static $pass = "carlos1234";
-        // private static $dsn = "mysql:host=$host;dbname=$db;";
         private static $conProyecto = null;
-        // $dsn = "pgsql:host=$host;dbname=$db;";
 
         public static function conectar(){
             if (null == self::$conProyecto) {

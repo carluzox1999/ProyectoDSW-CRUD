@@ -10,12 +10,6 @@ $sql = "SELECT * FROM productos WHERE  id = '$id';";
 $conexion = $pdoNombre->prepare($sql);
 $conexion->execute([$id]);
 $data = $conexion->fetch(PDO::FETCH_OBJ);
-
-// $pdoIdTienda = Conexion::conectar();
-// $sqlTienda = "SELECT * FROM stocks WHERE producto = ?;";
-// $conexion = $pdoNombre->prepare($sqlTienda);
-// $conexion->execute([$id]);
-// $dataTienda = $conexion->fetch(PDO::FETCH_OBJ);
 ?>
 
 <!DOCTYPE html>
@@ -59,40 +53,40 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
                 $pdo = Conexion::conectar();
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdo->beginTransaction();
-                $sql = $pdo->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
+                $sqlListado = $pdo->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
                 $pdo->commit();
             } catch (Exception $e) {;
                 echo "Lista no completada: " . $e->getMessage();
             }
 
-            foreach ($sql as $resultado) {
+            foreach ($sqlListado as $resultado) {
                 echo "<tr>";
                 echo "<form class='row g-3' method='get' action='muevestock.php' autocomplete='off'>";
                 echo "<td><b>" . $resultado['nombre'] . "<b></td>";
                 echo "<td><b>" . $resultado['unidades'] . "<b></td>";
                 echo "<td>
-                                    <select class='form-control' name='destino'>
-                                        <option>Seleccione Opción</option>";
+                                    <select class='form-control' name='tiendaDestino'>";
 
                 $pdoTienda = Conexion::conectar();
                 $sqlTienda = $pdoTienda->query('SELECT id, nombre FROM tiendas');
                 $sqlTienda->execute();
                 while ($data = $sqlTienda->fetch(PDO::FETCH_OBJ)) {
-                    echo "<option value= '" . $data->id . "'>" . $data->nombre . "</option>";
+                    if ($resultado['tienda'] != $data->id) {
+                        echo "<option value= '" . $data->id . "'>" . $data->nombre . "</option>";
+                    }
                 }
                 Conexion::desconectar();
                 echo "</select>";
                 echo "</td>";
                 echo "<td>
-                                    <select class='form-control' name='unidades'>
-                                        <option>Seleccione Opción</option>";
+                                    <select class='form-control' name='unidades'>";
 
                 $pdo = Conexion::conectar();
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdo->beginTransaction();
-                $sql = "SELECT * FROM stocks;";
+                $sqlStock = "SELECT * FROM stocks;";
                 $pdo->commit();
-                $conexion = $pdo->prepare($sql);
+                $conexion = $pdo->prepare($sqlStock);
                 $conexion->execute();
                 $data = $conexion->fetch(PDO::FETCH_OBJ);
                 $unidades = $data->unidades;
@@ -100,33 +94,123 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
-                Conexion::desconectar();
+                
                 echo "</select>";
                 echo "</td>";
                 echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
                 echo "<input hidden name='nombre' value='" . $resultado["nombre"] . "' '>";
                 echo "<input hidden name='producto' value='" . $id . "' '>";
-                echo "<td><button type='submit' class='btn btn-primary'>Mover Stock</button></td>";
+                echo "<td><button type='submit' class='btn btn-primary d-grid gap-2'>Mover Stock</button></td>";
                 echo "</form>";
                 echo "</tr>";
                 echo "</table";
             }
         } else {
+            $isTransaccion = true;
             $nombre = $_GET['nombre'];
             $unidades = $_GET['unidades'];
             $tienda = $_GET['tienda'];
             $producto = $_GET['producto'];
-            $destino = $_GET['destino'];
+            $tiendaDestino = $_GET['tiendaDestino'];
 
             $pdo = Conexion::conectar();
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
-            $sql = $pdo->query("SELECT * FROM stocks where tienda = ;");
+            $sqlTiendaActual = $pdo->query("SELECT * FROM stocks where stocks.tienda = '$tienda' and stocks.producto;");
+            $transaccion = $sqlTiendaActual->fetch();
+
+            if ($transaccion['unidades'] == $unidades) {
+                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto;");
+                $transaccionStockB = $sqlBorrarStock->fetch(PDO::FETCH_OBJ);
+                if (!$transaccionStockB) {
+                    $isTransaccion = false;
+                }
+            } else {
+                $sqlActualizarStock = $pdo->query("UPDATE stocks SET unidades = unidades - '$unidades' where stocks.tienda = '$tienda' and stocks.producto;");
+                $transaccionStockA = $sqlActualizarStock->fetch(PDO::FETCH_OBJ);
+                if (!$transaccionStockA) {
+                    $isTransaccion = false;
+                }
+            }
+
+            $sqlTiendaDestino = $pdo->query("SELECT * FROM stocks where stocks.tienda = '$tiendaDestino' and stocks.producto = '$producto';");
+            $transaccionDestino = $sqlTiendaDestino->fetch(PDO::FETCH_OBJ);
+
+            if ($transaccionDestino) {
+                $sqlAgregarUnidades = $pdo->query("UPDATE stocks SET unidades = unidades + '$unidades' where stocks.tienda = '$tiendaDestino' and stocks.producto = '$producto';");
+                $transaccionUnidadesA = $sqlAgregarUnidades->fetch(PDO::FETCH_OBJ);
+                if (!$transaccionUnidadesA) {
+                    $isTransaccion = false;
+                }
+            } else {
+                $sqlRegistroStock = $pdo->query("INSERT INTO stocks VALUES('$producto', '$tiendaDestino', '$unidades');");
+                $transaccionUnidadesI = $sqlRegistroStock->fetch(PDO::FETCH_OBJ);
+                if (!$transaccionUnidadesI) {
+                    $isTransaccion = false;
+                }
+            }
+
+            if ($isTransaccion = false) {
+                $pdo->rollback();
+            } else {
+                $pdo->commit();
+            }
+
+            try {
+                $pdo = Conexion::conectar();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sqlListado = $pdo->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
+            } catch (Exception $e) {;
+                echo "Lista no completada: " . $e->getMessage();
+            }
+
+            foreach ($sqlListado as $resultado) {
+                echo "<tr>";
+                echo "<form class='row g-3' method='get' action='muevestock.php' autocomplete='off'>";
+                echo "<td><b>" . $resultado['nombre'] . "<b></td>";
+                echo "<td><b>" . $resultado['unidades'] . "<b></td>";
+                echo "<td>
+                                    <select class='form-control' name='tiendaDestino'>";
+
+                $pdoTienda = Conexion::conectar();
+                $sqlTienda = $pdoTienda->query('SELECT id, nombre FROM tiendas');
+                $sqlTienda->execute();
+                while ($data = $sqlTienda->fetch(PDO::FETCH_OBJ)) {
+                    if ($resultado['tienda'] != $data->id) {
+                        echo "<option value= '" . $data->id . "'>" . $data->nombre . "</option>";
+                    }
+                }
+                Conexion::desconectar();
+                echo "</select>";
+                echo "</td>";
+                echo "<td>
+                                    <select class='form-control' name='unidades'>";
+
+                $pdo = Conexion::conectar();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sqlStock = "SELECT * FROM stocks;";
+                $conexion = $pdo->prepare($sqlStock);
+                $conexion->execute();
+                $data = $conexion->fetch(PDO::FETCH_OBJ);
+                $unidades = $data->unidades;
+
+                for ($i = 1; $i <= $unidades; $i++) {
+                    echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
+                }
+                echo "</select>";
+                echo "</td>";
+                echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
+                echo "<input hidden name='nombre' value='" . $resultado["nombre"] . "' '>";
+                echo "<input hidden name='producto' value='" . $id . "' '>";
+                echo "<td><button type='submit' class='btn btn-primary d-grid gap-2'>Mover Stock</button></td>";
+                echo "</form>";
+                echo "</tr>";
+                echo "</table";
+            }
+            $pdo = Conexion::desconectar();
         }
 
         ?>
-
         <script src="./js/bootstrap.min.js"></script>
 </body>
-
 </html>
