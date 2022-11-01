@@ -50,11 +50,11 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
         if (!empty($_GET) & (count($_GET) < 2)) {
 
             try {
-                $pdo = Conexion::conectar();
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdo->beginTransaction();
-                $sqlListado = $pdo->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
-                $pdo->commit();
+                $pdoListado = Conexion::conectar();
+                $pdoListado->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdoListado->beginTransaction();
+                $sqlListado = $pdoListado->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
+                $pdoListado->commit();
             } catch (Exception $e) {;
                 echo "Lista no completada: " . $e->getMessage();
             }
@@ -81,17 +81,17 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
                 echo "<td>
                                     <select class='form-control' name='unidades'>";
 
-                $pdo = Conexion::conectar();
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdo->beginTransaction();
+                $pdoStock = Conexion::conectar();
+                $pdoStock->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdoStock->beginTransaction();
                 $sqlStock = "SELECT * FROM stocks;";
-                $pdo->commit();
-                $conexion = $pdo->prepare($sqlStock);
-                $conexion->execute();
-                $data = $conexion->fetch(PDO::FETCH_OBJ);
-                $unidades = $data->unidades;
+                $pdoStock->commit();
+                $conexionStock = $pdoStock->prepare($sqlStock);
+                $conexionStock->execute();
+                $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
+                $unidades = $dataStock->unidades;
 
-                for ($i = 1; $i <= $unidades; $i++) {
+                for ($i = 0; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
                 
@@ -120,12 +120,12 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
             $transaccion = $sqlTiendaActual->fetch();
 
             if ($transaccion['unidades'] == $unidades) {
-                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto;");
+                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto = '$producto';");
                 $transaccionStockB = $sqlBorrarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockB) {
                     $isTransaccion = false;
                 }
-            } else {
+            } else{
                 $sqlActualizarStock = $pdo->query("UPDATE stocks SET unidades = unidades - '$unidades' where stocks.tienda = '$tienda' and stocks.producto;");
                 $transaccionStockA = $sqlActualizarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockA) {
@@ -143,6 +143,7 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
                     $isTransaccion = false;
                 }
             } else {
+                // Se crea el registro del nuevo stock en la nueva tienda destino
                 $sqlRegistroStock = $pdo->query("INSERT INTO stocks VALUES('$producto', '$tiendaDestino', '$unidades');");
                 $transaccionUnidadesI = $sqlRegistroStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionUnidadesI) {
