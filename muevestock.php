@@ -8,8 +8,6 @@ if (!empty($_GET['producto'])) {
 $pdoNombre = Conexion::conectar();
 $sql = "SELECT * FROM productos WHERE  id = '$id';";
 $conexion = $pdoNombre->query($sql);
-// $conexion->execute([$id]);
-// $conexion->execute([$id]);
 $data = $conexion->fetch(PDO::FETCH_OBJ);
 $nombre = $data->nombre;
 ?>
@@ -21,6 +19,7 @@ $nombre = $data->nombre;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style2.css">
     <title>Stock</title>
@@ -88,12 +87,11 @@ $nombre = $data->nombre;
                 $pdoStock->beginTransaction();
                 $sqlStock = "SELECT * FROM stocks;";
                 $pdoStock->commit();
-                $conexionStock = $pdoStock->prepare($sqlStock);
-                $conexionStock->execute();
+                $conexionStock = $pdoStock->query($sqlStock);
                 $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
                 $unidades = $dataStock->unidades;
 
-                for ($i = 0; $i <= $unidades; $i++) {
+                for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
                 
@@ -122,7 +120,7 @@ $nombre = $data->nombre;
             $transaccion = $sqlTiendaActual->fetch();
 
             if ($transaccion['unidades'] == $unidades) {
-                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto = '$producto';");
+                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto");
                 $transaccionStockB = $sqlBorrarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockB) {
                     $isTransaccion = false;
@@ -189,13 +187,14 @@ $nombre = $data->nombre;
                 echo "<td>
                                     <select class='form-control' name='unidades'>";
 
-                $pdo = Conexion::conectar();
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdoStock = Conexion::conectar();
+                $pdoStock->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdoStock->beginTransaction();
                 $sqlStock = "SELECT * FROM stocks;";
-                $conexion = $pdo->prepare($sqlStock);
-                $conexion->execute();
-                $data = $conexion->fetch(PDO::FETCH_OBJ);
-                $unidades = $data->unidades;
+                $pdoStock->commit();
+                $conexionStock = $pdoStock->query($sqlStock);
+                $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
+                $unidades = $dataStock->unidades;
 
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';

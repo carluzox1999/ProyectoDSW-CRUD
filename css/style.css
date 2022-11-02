@@ -32,8 +32,9 @@ h1{
 }
 
 tr th{
-    text-align: center;
     vertical-align: middle;
+    border-style: inset;
+    border-width: 5px;
 }
 
 tr td{
