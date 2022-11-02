@@ -7,9 +7,11 @@ if (!empty($_GET['producto'])) {
 
 $pdoNombre = Conexion::conectar();
 $sql = "SELECT * FROM productos WHERE  id = '$id';";
-$conexion = $pdoNombre->prepare($sql);
-$conexion->execute([$id]);
+$conexion = $pdoNombre->query($sql);
+// $conexion->execute([$id]);
+// $conexion->execute([$id]);
 $data = $conexion->fetch(PDO::FETCH_OBJ);
+$nombre = $data->nombre;
 ?>
 
 <!DOCTYPE html>
@@ -34,14 +36,14 @@ $data = $conexion->fetch(PDO::FETCH_OBJ);
 
     <h1>
         <?php
-        echo "<h1>Nombre Producto: $data->nombre</h1>";
+        echo "<h1>$nombre</h1>";
         ?>
     </h1>
 
     <table class="table table-striped table-hover">
         <tr class="table-dark">
             <th>Tienda</th>
-            <th>Stock Anual</th>
+            <th>Stock Actual</th>
             <th>Nueva Tienda</th>
             <th>Nº Unidades</th>
             <th>Mover Stock</th>
