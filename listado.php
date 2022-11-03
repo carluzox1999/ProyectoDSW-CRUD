@@ -21,6 +21,7 @@
     ?>
 
     <script src="./js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/ad7c1d9068.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

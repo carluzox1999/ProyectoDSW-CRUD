@@ -11,13 +11,15 @@ if ($pag < 1) {
 $offset=($pag-1)*$limit;
 
 if (isset($_GET['columna'])){
-    $order=" order by ".$_GET['columna']." ".$_GET['tipo'];
+    $order="ORDER BY ".$_GET['columna'].", ".$_GET['tipo'];
 }
 
 $conexion = Conexion::conectar();
-$busqueda=$conexion->prepare("SELECT * FROM productos LIMIT $offset, $limit $order");
+
+$busqueda=$conexion->prepare("SELECT * FROM productos LIMIT $offset, $limit");
 $busqueda->execute();
-$busquedaTotal = $conexion->prepare("SELECT * FROM productos");
+
+$busquedaTotal = $conexion->prepare("SELECT * FROM productos $order");
 $busquedaTotal->execute();
 $total=$busquedaTotal->rowCount();
 
@@ -27,33 +29,20 @@ $total=$busquedaTotal->rowCount();
 echo "<table class='table table-striped table-hover'>
         <tr class='table-dark'>
             <th class='detalle'>Detalle</th>
-            <th class='codigo'>Codigo
-                <div class='float-end'>";
-                    if(isset($_GET['columna']) && $_GET['columna'] =='id'&&$_GET['tipo']=='asc'):
-                        echo "<i class='glyphicon'>&#129045;</i>";
-                    else:
-                        echo "<a href='listado.php?columna=id&tipo=asc' class='glyphicon'>&#129045;</a>";
-                    endif;
-                    if(isset($_GET['columna']) && $_GET['columna'] =='id'&&$_GET['tipo']=='desc'):
-                        echo "class='glyphicon'>&#129047;</span>";
-                    else:
-                        echo "<a href='listado.php?columna=id&tipo=desc' class='glyphicon'>&#129047;</a>";
-                    endif;
-echo            "</div>
-            </th>
+            <th class='codigo'>Codigo</th>
             <th>Nombre
                 <div class='float-end'>";
-                    if(isset($_GET['columna']) && $_GET['columna'] =='nombre'&&$_GET['tipo']=='asc'):
-                        echo "<i class='glyphicon'>&#129045;</i>";
+                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'asc'):
+                        echo "<i class='fa fa-arrow-up'></i>";
                     else:
-                        echo "<a href='listado.php?columna=nombre&tipo=asc' class='glyphicon'>&#129045;</a>";
+                        echo "<a href='listado.php?columna=nombre&tipo=asc'><i class='fa fa-arrow-up'></i></a>";
                     endif;
-                    if(isset($_GET['columna']) && $_GET['columna'] =='nombre'&&$_GET['tipo']=='desc'):
-                        echo "class='glyphicon'>&#129047;</span>";
+                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'desc'):
+                        echo "<i class='fa fa-arrow-down'></i>";
                     else:
-                        echo "<a href='listado.php?columna=nombre&tipo=desc' class='glyphicon'>&#129047;</a>";
+                        echo "<a href='listado.php?columna=nombre&tipo=desc'><i class='fa fa-arrow-down'></i></a>";
                     endif;
-echo            "</div>
+echo        "</div>    
             </th>
             <th>Acciones</th>
         </tr> ";
