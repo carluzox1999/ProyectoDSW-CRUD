@@ -184,15 +184,16 @@ $nombre = $data->nombre;
                 echo "<td>
                                     <select class='form-control' name='unidades'>";
 
-                $pdoStock = Conexion::conectar();
-                $sqlStock = "SELECT unidades FROM stocks;";
-                $conexionStock = $pdoStock->query($sqlStock);
-                $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
-                $unidades = $dataStock->unidades;
-
+                $pdoUnidades = Conexion::conectar();
+                $sqlUnidades = "SELECT unidades FROM stocks WHERE producto = '$id' and tienda = '$resultado[tienda]';";
+                $conexionUnidades = $pdoUnidades->query($sqlUnidades);
+                $dataUnidades = $conexionUnidades->fetch(PDO::FETCH_OBJ);
+                $unidades = $dataUnidades->unidades;
+                    
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
+                
                 echo "</select>";
                 echo "</td>";
                 echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
