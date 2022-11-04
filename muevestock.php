@@ -83,7 +83,7 @@ $nombre = $data->nombre;
                                     <select class='form-control' name='unidades'>";
 
                 $pdoUnidades = Conexion::conectar();
-                $sqlUnidades = "SELECT unidades FROM stocks;";
+                $sqlUnidades = "SELECT unidades FROM stocks WHERE producto = '$id' and tienda = '$resultado[tienda]';";
                 $conexionUnidades = $pdoUnidades->query($sqlUnidades);
                 $dataUnidades = $conexionUnidades->fetch(PDO::FETCH_OBJ);
                 $unidades = $dataUnidades->unidades;
@@ -116,7 +116,7 @@ $nombre = $data->nombre;
             $sqlTiendaActual = $pdo->query("SELECT * FROM stocks where stocks.tienda = '$tienda' and stocks.producto;");
             $transaccion = $sqlTiendaActual->fetch();
 
-            if ($transaccion['unidades'] == $unidades) {
+            if ($transaccion['unidades'] == $unidades && $transaccion['unidades'] == 0){
                 $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto");
                 $transaccionStockB = $sqlBorrarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockB) {
