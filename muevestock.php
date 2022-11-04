@@ -82,14 +82,11 @@ $nombre = $data->nombre;
                 echo "<td>
                                     <select class='form-control' name='unidades'>";
 
-                $pdoStock = Conexion::conectar();
-                $pdoStock->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdoStock->beginTransaction();
-                $sqlStock = "SELECT * FROM stocks;";
-                $pdoStock->commit();
-                $conexionStock = $pdoStock->query($sqlStock);
-                $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
-                $unidades = $dataStock->unidades;
+                $pdoUnidades = Conexion::conectar();
+                $sqlUnidades = "SELECT unidades FROM stocks;";
+                $conexionUnidades = $pdoUnidades->query($sqlUnidades);
+                $dataUnidades = $conexionUnidades->fetch(PDO::FETCH_OBJ);
+                $unidades = $dataUnidades->unidades;
 
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
@@ -188,10 +185,7 @@ $nombre = $data->nombre;
                                     <select class='form-control' name='unidades'>";
 
                 $pdoStock = Conexion::conectar();
-                $pdoStock->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdoStock->beginTransaction();
-                $sqlStock = "SELECT * FROM stocks;";
-                $pdoStock->commit();
+                $sqlStock = "SELECT unidades FROM stocks;";
                 $conexionStock = $pdoStock->query($sqlStock);
                 $dataStock = $conexionStock->fetch(PDO::FETCH_OBJ);
                 $unidades = $dataStock->unidades;
