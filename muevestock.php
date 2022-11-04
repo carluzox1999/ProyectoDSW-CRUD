@@ -113,17 +113,17 @@ $nombre = $data->nombre;
             $pdo = Conexion::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
-            $sqlTiendaActual = $pdo->query("SELECT * FROM stocks where stocks.tienda = '$tienda' and stocks.producto;");
+            $sqlTiendaActual = $pdo->query("SELECT * FROM stocks where stocks.tienda = '$tienda' and stocks.producto = '$producto';");
             $transaccion = $sqlTiendaActual->fetch();
 
-            if ($transaccion['unidades'] == $unidades && $transaccion['unidades'] == 0){
-                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto");
+            if ($transaccion['unidades'] == $unidades){
+                $sqlBorrarStock = $pdo->query("DELETE FROM stocks where stocks.tienda = '$tienda' and stocks.producto = '$producto'");
                 $transaccionStockB = $sqlBorrarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockB) {
                     $isTransaccion = false;
                 }
             } else{
-                $sqlActualizarStock = $pdo->query("UPDATE stocks SET unidades = unidades - '$unidades' where stocks.tienda = '$tienda' and stocks.producto;");
+                $sqlActualizarStock = $pdo->query("UPDATE stocks SET unidades = unidades - '$unidades' where stocks.tienda = '$tienda' and stocks.producto = '$producto';");
                 $transaccionStockA = $sqlActualizarStock->fetch(PDO::FETCH_OBJ);
                 if (!$transaccionStockA) {
                     $isTransaccion = false;
@@ -193,7 +193,7 @@ $nombre = $data->nombre;
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
-                
+
                 echo "</select>";
                 echo "</td>";
                 echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
