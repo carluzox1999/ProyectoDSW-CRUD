@@ -9,15 +9,10 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-h1{
-    text-align: center;
-}
-
 @media (max-width: 800px) {
     .codigo {
      display: none;
     }
-
 }
 
 @media (max-width: 300px) {

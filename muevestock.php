@@ -6,10 +6,11 @@ if (!empty($_GET['producto'])) {
 }
 
 $pdoNombre = Conexion::conectar();
-$sql = "SELECT * FROM productos WHERE  id = '$id';";
+$sql = "SELECT nombre FROM productos WHERE  id = '$id';";
 $conexion = $pdoNombre->query($sql);
 $data = $conexion->fetch(PDO::FETCH_OBJ);
 $nombre = $data->nombre;
+$pdoNombre = Conexion::desconectar();
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +20,6 @@ $nombre = $data->nombre;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style2.css">
     <title>Stock</title>
@@ -29,6 +29,7 @@ $nombre = $data->nombre;
     <div class="d-grid gap-2">
         <a href="listado.php" class="btn btn-secondary btn-block boton">Volver</a>
     </div>
+
     <hr />
 
     <h1>Mover Stock</h1>
@@ -56,6 +57,7 @@ $nombre = $data->nombre;
                 $pdoListado->beginTransaction();
                 $sqlListado = $pdoListado->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
                 $pdoListado->commit();
+                $pdoListado = Conexion::desconectar();
             } catch (Exception $e) {;
                 echo "Lista no completada: " . $e->getMessage();
             }
@@ -91,7 +93,7 @@ $nombre = $data->nombre;
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
-                
+                Conexion::desconectar();
                 echo "</select>";
                 echo "</td>";
                 echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
@@ -158,6 +160,7 @@ $nombre = $data->nombre;
                 $pdo = Conexion::conectar();
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $sqlListado = $pdo->query("SELECT * FROM stocks, tiendas where producto = '$id' and stocks.tienda = tiendas.id ORDER BY tiendas.nombre;");
+                Conexion::desconectar();
             } catch (Exception $e) {;
                 echo "Lista no completada: " . $e->getMessage();
             }
@@ -193,7 +196,7 @@ $nombre = $data->nombre;
                 for ($i = 1; $i <= $unidades; $i++) {
                     echo '<option value="' . $i . '">' . $i . ' unidades' . '</option>';
                 }
-
+                Conexion::desconectar();
                 echo "</select>";
                 echo "</td>";
                 echo "<input hidden name='tienda' value='" . $resultado["id"] . "''>";
@@ -204,9 +207,8 @@ $nombre = $data->nombre;
                 echo "</tr>";
                 echo "</table";
             }
-            $pdo = Conexion::desconectar();
-        }
-
+        } 
+        
         ?>
         <script src="./js/bootstrap.min.js"></script>
 </body>

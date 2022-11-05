@@ -11,37 +11,48 @@ if ($pag < 1) {
 $offset=($pag-1)*$limit;
 
 if (isset($_GET['columna'])){
-    $order="ORDER BY ".$_GET['columna'].", ".$_GET['tipo'];
+    $order="ORDER BY ".$_GET['columna']." ".$_GET['tipo'];
 }
 
 $conexion = Conexion::conectar();
 
-$busqueda=$conexion->prepare("SELECT * FROM productos LIMIT $offset, $limit");
+// Esta consulta filtra los distintos puntos de las actividades, que proporciona la funcionalidad
+$busqueda=$conexion->prepare("SELECT * FROM productos $order LIMIT $offset, $limit");
 $busqueda->execute();
 
-$busquedaTotal = $conexion->prepare("SELECT * FROM productos $order");
+// Esta consulta hace la busqueda total de todos los productos
+$busquedaTotal = $conexion->prepare("SELECT * FROM productos");
 $busquedaTotal->execute();
 $total=$busquedaTotal->rowCount();
-
-
-
 
 echo "<table class='table table-striped table-hover'>
         <tr class='table-dark'>
             <th class='detalle'>Detalle</th>
-            <th class='codigo'>Codigo</th>
+            <th class='codigo'>Codigo
+            <div class='float-end'>";
+                if(isset($_GET['columna']) && $_GET['columna'] == 'id' && $_GET['tipo'] == 'ASC'){
+                    echo "<i class='fa fa-arrow-up'></i>";
+                } else{
+                    echo "<a href='listado.php?columna=id&tipo=ASC'><i class='fa fa-arrow-up'></i></a>";
+                }
+                if(isset($_GET['columna']) && $_GET['columna'] == 'id' && $_GET['tipo'] == 'DESC'){
+                    echo "<i class='fa fa-arrow-down'></i>";
+                } else{
+                    echo "<a href='listado.php?columna=id&tipo=DESC'><i class='fa fa-arrow-down'></i></a>";
+                }
+echo        "</th>
             <th>Nombre
                 <div class='float-end'>";
-                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'asc'):
+                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'ASC'){
                         echo "<i class='fa fa-arrow-up'></i>";
-                    else:
-                        echo "<a href='listado.php?columna=nombre&tipo=asc'><i class='fa fa-arrow-up'></i></a>";
-                    endif;
-                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'desc'):
+                    } else{
+                        echo "<a href='listado.php?columna=nombre&tipo=ASC'><i class='fa fa-arrow-up'></i></a>";
+                    }
+                    if(isset($_GET['columna']) && $_GET['columna'] == 'nombre' && $_GET['tipo'] == 'DESC'){
                         echo "<i class='fa fa-arrow-down'></i>";
-                    else:
-                        echo "<a href='listado.php?columna=nombre&tipo=desc'><i class='fa fa-arrow-down'></i></a>";
-                    endif;
+                    } else{
+                        echo "<a href='listado.php?columna=nombre&tipo=DESC'><i class='fa fa-arrow-down'></i></a>";
+                    }
 echo        "</div>    
             </th>
             <th>Acciones</th>
@@ -79,5 +90,3 @@ echo "</tr>
 ";
 
 Conexion::desconectar();
-
-?>

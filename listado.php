@@ -11,6 +11,11 @@
 </head>
 
 <body>
+    <div class='float-lg-start'>
+        <a href="listado.php"><i class="fa-solid fa-house"
+                style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>
+    </div>
+
     <h1>Gestión de productos</h1>
 
     <div class="d-grid gap-2">
