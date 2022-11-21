@@ -28,7 +28,7 @@
     <h1>Gestión de productos</h1>
 
     <div class="d-grid gap-2">
-        <a href="cerrarSesion.php" class="btn btn-success btn-block boton">Cerrar Sesión</a>
+        <a href="cerrarSesion.php" class="btn btn-secondary btn-block boton">Cerrar Sesión</a>
         <a href="crear.php" class="btn btn-success btn-block boton">Crear producto</a>
     </div>
     <?php
