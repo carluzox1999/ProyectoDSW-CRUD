@@ -6,13 +6,13 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
-require "conexion.php";
 
 $id = null;
 
 if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
-}
+} else
+    header("location: listado.php");
 
 if (null == $id) {
     $nuevaURL = "listado.php";

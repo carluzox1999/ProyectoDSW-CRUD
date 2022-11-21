@@ -6,11 +6,11 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
-require "conexion.php";
 
 if (!empty($_GET['id'])) {
     $id = $_REQUEST['id'];
-}
+} else
+    header("Location: listado.php");
 
 if (!empty($_POST)) {
 

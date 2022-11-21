@@ -59,6 +59,7 @@
 
         if($query -> rowCount() > 0){
             $_SESSION['usuario'] = $usuarioLogin['usuario'];
+            
             header("location: listado.php");
         }else{
             // print_r("Contraseña a verificar: ".$clave);

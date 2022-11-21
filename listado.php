@@ -2,14 +2,25 @@
     session_start();
     require "conexion.php";
     $conexion = Conexion::conectar();
+
     if(!isset($_SESSION['usuario'])){
         header("location: login.php");
     } elseif (isset($_SESSION['usuario'])){
+        $usuarioActual = $_SESSION['usuario'];
+
+        $conexion = Conexion::conectar();
         
+        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra FROM usuarios WHERE usuario = $usuarioActual;");
+
+        $especificacionesUsuarioSQL->execute();
+        $especificaciones = $query->fetch(PDO::FETCH_ASSOC);
+
+        $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
+        // $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,6 +31,46 @@
 </head>
 
 <body>
+    <style>
+    html, body {
+        background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
+        padding:0;
+        margin:0;
+        height:100%;
+    }
+
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (max-width: 800px) {
+        .codigo {
+        display: none;
+        }
+    }
+
+    @media (max-width: 300px) {
+        .detalle {
+            display: none;
+        }
+        
+        .codigo {
+        display: none;
+        }
+
+    }
+
+    tr th{
+        vertical-align: middle;
+        border-style: inset;
+        border-width: 5px;
+    }
+
+    tr td{
+        text-align: center;
+        vertical-align: middle;
+    }
+    </style>
     <div class='float-lg-start'>
         <a href="listado.php"><i class="fa-solid fa-house"
                 style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>

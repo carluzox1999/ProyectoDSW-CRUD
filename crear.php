@@ -6,7 +6,6 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
-require "conexion.php";
 
 // Procesamiento de validaciones
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

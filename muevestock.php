@@ -6,11 +6,11 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
-include "conexion.php";
 
 if (!empty($_GET['producto'])) {
     $id = $_REQUEST['producto'];
-}
+} else
+    header("location: listado.php");
 
 $pdoNombre = Conexion::conectar();
 $sql = "SELECT nombre FROM productos WHERE  id = '$id';";
