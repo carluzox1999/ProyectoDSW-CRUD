@@ -6,17 +6,19 @@
     if(!isset($_SESSION['usuario'])){
         header("location: login.php");
     } elseif (isset($_SESSION['usuario'])){
+        
         $usuarioActual = $_SESSION['usuario'];
 
         $conexion = Conexion::conectar();
         
-        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra FROM usuarios WHERE usuario = $usuarioActual;");
+        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
+        FROM usuarios WHERE usuario = '$usuarioActual';");
 
         $especificacionesUsuarioSQL->execute();
-        $especificaciones = $query->fetch(PDO::FETCH_ASSOC);
+        $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
 
         $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
-        // $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
+        $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
     
 ?>
 <!DOCTYPE html>
@@ -34,6 +36,7 @@
     <style>
     html, body {
         background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
+        font-family: <?php echo $_SESSION['tipoletra'] ?>;
         padding:0;
         margin:0;
         height:100%;
