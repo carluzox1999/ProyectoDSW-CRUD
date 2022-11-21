@@ -1,3 +1,12 @@
+<?php 
+    session_start();
+    require "conexion.php";
+    $conexion = Conexion::conectar();
+    if(!isset($_SESSION['usuario'])){
+        header("location: login.php");
+    } elseif (isset($_SESSION['usuario'])){
+        
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +28,7 @@
     <h1>Gestión de productos</h1>
 
     <div class="d-grid gap-2">
+        <a href="cerrarSesion.php" class="btn btn-success btn-block boton">Cerrar Sesión</a>
         <a href="crear.php" class="btn btn-success btn-block boton">Crear producto</a>
     </div>
     <?php
@@ -28,5 +38,7 @@
     <script src="./js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/ad7c1d9068.js" crossorigin="anonymous"></script>
 </body>
-
 </html>
+<?php
+    }
+?>

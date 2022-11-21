@@ -1,4 +1,11 @@
 <?php
+session_start();
+require "conexion.php";
+$conexion = Conexion::conectar();
+if(!isset($_SESSION['usuario'])){
+    header("location: login.php");
+} elseif (isset($_SESSION['usuario'])){
+
 require "conexion.php";
 
 if (!empty($_GET['id'])) {
@@ -128,3 +135,6 @@ try {
 </body>
 
 </html>
+<?php
+}
+?>

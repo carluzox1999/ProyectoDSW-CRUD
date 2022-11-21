@@ -1,4 +1,11 @@
 <?php
+session_start();
+require "conexion.php";
+$conexion = Conexion::conectar();
+if(!isset($_SESSION['usuario'])){
+    header("location: login.php");
+} elseif (isset($_SESSION['usuario'])){
+
 include "conexion.php";
 
 if (!empty($_GET['producto'])) {
@@ -213,3 +220,6 @@ $pdoNombre = Conexion::desconectar();
         <script src="./js/bootstrap.min.js"></script>
 </body>
 </html>
+<?php
+}
+?>
