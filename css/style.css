@@ -13,6 +13,10 @@ body::-webkit-scrollbar {
     .codigo {
      display: none;
     }
+
+    .imagen {
+        display: none;
+    }
 }
 
 @media (max-width: 300px) {
@@ -22,6 +26,10 @@ body::-webkit-scrollbar {
     
     .codigo {
      display: none;
+    }
+
+    .imagen {
+        display: none;
     }
 
 }

@@ -16,29 +16,30 @@
     <title>Principal</title>
 </head>
 <body>
-    <div class="grid estilodiv">
-        <form class="row g-3" action="login.php" method="post" autocomplete="off">
-            <h1>LOGIN</h1>
-            <table class="table table-striped">
-                <tr>
-                    <td><label class="form-label">Usuario</label></td>
-                    <td><input type="text" class="form-control" name="usuario" placeholder="Usuario"></td>
-                </tr>
-                <tr>
-                    <td>Contraseña</td>
-                    <td><input type="text" class="form-control" name="clave" placeholder="Contraseña"></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Login</button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+    <div class="d-flex d-flex justify-content-center vh-100">
+        <div class="bg-dark text-white col-md-6 d-flex d-flex justify-content-center align-items-center">
+            <div class="imagen">
+                <img src="./IMG/Imagen Tema.png" width="100%" height="100%">
+            </div>
+        </div>
+
+        <div class="bg-light col-md-6 d-flex d-flex justify-content-center align-items-center">
+            <div class="">
+                <form class="row g-3" action="login.php" method="post" autocomplete="off">
+                    <h1>LOGIN</h1>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="usuario" placeholder="Usuario">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" name="clave" placeholder="Contraseña">
+                    </div>
+                        
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Login</button>
+                    </div> 
+                </form>
+            </div>
+        </div>
     </div>
 
     <script src="./js/bootstrap.min.js"></script>
