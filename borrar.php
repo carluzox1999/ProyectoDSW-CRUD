@@ -7,33 +7,46 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
+    $usuarioActual = $_SESSION['usuario'];
 
-$id = 0;
+    $conexion = Conexion::conectar();
+    
+    $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
+    FROM usuarios WHERE usuario = '$usuarioActual';");
 
-if (!empty($_GET['id'])) {
-    $id = $_REQUEST['id'];
-} else
-    header("Location: listado.php");
+    $especificacionesUsuarioSQL->execute();
+    $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
 
-if (!empty($_POST)) {
-    $id = $_POST['id'];
+    $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
+    $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
 
-    try {
-        $pdo = Conexion::conectar();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->beginTransaction();
-        $sql = "DELETE FROM productos where id = ?;";
-        $pdo->commit();
-        $conexion = $pdo->prepare($sql);
-        $conexion->execute([$id]);
-        Conexion::desconectar();
-        $nuevaURL = "listado.php";
-        header('Location: ' . $nuevaURL);
-    } catch (Exception $e) {
-        $pdo->rollback();
-        echo "Lista no completada: " . $e->getMessage();
+
+    $id = 0;
+
+    if (!empty($_GET['id'])) {
+        $id = $_REQUEST['id'];
+    } else
+        header("Location: listado.php");
+
+    if (!empty($_POST)) {
+        $id = $_POST['id'];
+
+        try {
+            $pdo = Conexion::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->beginTransaction();
+            $sql = "DELETE FROM productos where id = ?;";
+            $pdo->commit();
+            $conexion = $pdo->prepare($sql);
+            $conexion->execute([$id]);
+            Conexion::desconectar();
+            $nuevaURL = "listado.php";
+            header('Location: ' . $nuevaURL);
+        } catch (Exception $e) {
+            $pdo->rollback();
+            echo "Lista no completada: " . $e->getMessage();
+        }
     }
-}
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +62,47 @@ if (!empty($_POST)) {
 </head>
 
 <body>
+    <style>
+        html, body {
+            background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
+            font-family: <?php echo $_SESSION['tipoletra'] ?>;
+            padding:0;
+            margin:0;
+            height:100%;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .codigo {
+            display: none;
+            }
+        }
+
+        @media (max-width: 300px) {
+            .detalle {
+                display: none;
+            }
+            
+            .codigo {
+            display: none;
+            }
+
+        }
+
+        tr th{
+            vertical-align: middle;
+            border-style: inset;
+            border-width: 5px;
+        }
+
+        tr td{
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
 
     <h1>Borrar Producto</h1>
 

@@ -6,56 +6,70 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
+    $usuarioActual = $_SESSION['usuario'];
 
-if (!empty($_GET['id'])) {
-    $id = $_REQUEST['id'];
-} else
-    header("Location: listado.php");
+    $conexion = Conexion::conectar();
+    
+    $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
+    FROM usuarios WHERE usuario = '$usuarioActual';");
 
-if (!empty($_POST)) {
+    $especificacionesUsuarioSQL->execute();
+    $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
 
-    $id = $_POST['id'];
-    $nombre = $_POST['nombre'];
-    $nombre_corto = $_POST['nombre_corto'];
-    $pvp = $_POST['pvp'];
-    $select = $_POST['familia'];
-    $descripcion = $_POST['descripcion'];
+    $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
+    $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
+
+
+
+    if (!empty($_GET['id'])) {
+        $id = $_REQUEST['id'];
+    } else
+        header("Location: listado.php");
+
+    if (!empty($_POST)) {
+
+        $id = $_POST['id'];
+        $nombre = $_POST['nombre'];
+        $nombre_corto = $_POST['nombre_corto'];
+        $pvp = $_POST['pvp'];
+        $select = $_POST['familia'];
+        $descripcion = $_POST['descripcion'];
+
+        try {
+            $pdo = Conexion::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->beginTransaction();
+            $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
+            $pdo->commit();
+            $conexion = $pdo->prepare($sql);
+            $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
+            Conexion::desconectar();
+            $nuevaURL = "listado.php";
+            header('Location: ' . $nuevaURL);
+        } catch (Exception $e) {
+            $pdo->rollback();
+            echo "Lista no completada: " . $e->getMessage();
+        }
+    }
 
     try {
         $pdo = Conexion::conectar();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->beginTransaction();
-        $sql = "UPDATE productos  SET nombre = ?, nombre_corto = ?, descripcion = ?, pvp = ?, familia = ? WHERE id = ?;";
+        $sql = "SELECT * FROM productos where id = ?;";
         $pdo->commit();
         $conexion = $pdo->prepare($sql);
-        $conexion->execute([$nombre, $nombre_corto, $descripcion, $pvp, $select, $id]);
-        Conexion::desconectar();
-        $nuevaURL = "listado.php";
-        header('Location: ' . $nuevaURL);
+        $conexion->execute([$id]);
+        $data = $conexion->fetch(PDO::FETCH_OBJ);
+        $nombre = $data->nombre;
+        $nombre_corto = $data->nombre_corto;
+        $pvp = $data->pvp;
+        $select = $data->familia;
+        $descripcion = $data->descripcion;
     } catch (Exception $e) {
         $pdo->rollback();
         echo "Lista no completada: " . $e->getMessage();
     }
-}
-
-try {
-    $pdo = Conexion::conectar();
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->beginTransaction();
-    $sql = "SELECT * FROM productos where id = ?;";
-    $pdo->commit();
-    $conexion = $pdo->prepare($sql);
-    $conexion->execute([$id]);
-    $data = $conexion->fetch(PDO::FETCH_OBJ);
-    $nombre = $data->nombre;
-    $nombre_corto = $data->nombre_corto;
-    $pvp = $data->pvp;
-    $select = $data->familia;
-    $descripcion = $data->descripcion;
-} catch (Exception $e) {
-    $pdo->rollback();
-    echo "Lista no completada: " . $e->getMessage();
-}
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +85,47 @@ try {
 </head>
 
 <body>
+    <style>
+        html, body {
+            background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
+            font-family: <?php echo $_SESSION['tipoletra'] ?>;
+            padding:0;
+            margin:0;
+            height:100%;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .codigo {
+            display: none;
+            }
+        }
+
+        @media (max-width: 300px) {
+            .detalle {
+                display: none;
+            }
+            
+            .codigo {
+            display: none;
+            }
+
+        }
+
+        tr th{
+            vertical-align: middle;
+            border-style: inset;
+            border-width: 5px;
+        }
+
+        tr td{
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
 
     <h1>Actualizar Producto</h1>
 

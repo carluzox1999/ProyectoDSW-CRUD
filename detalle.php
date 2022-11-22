@@ -6,25 +6,38 @@ if(!isset($_SESSION['usuario'])){
     header("location: login.php");
 } elseif (isset($_SESSION['usuario'])){
 
+    $usuarioActual = $_SESSION['usuario'];
 
-$id = null;
+    $conexion = Conexion::conectar();
+    
+    $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
+    FROM usuarios WHERE usuario = '$usuarioActual';");
 
-if (!empty($_GET['id'])) {
-    $id = $_REQUEST['id'];
-} else
-    header("location: listado.php");
+    $especificacionesUsuarioSQL->execute();
+    $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
 
-if (null == $id) {
-    $nuevaURL = "listado.php";
-    header('Location: ' . $nuevaURL);
-} else {
-    $pdo = Conexion::conectar();
-    $sql = "SELECT * FROM productos where id = ?;";
-    $conexion = $pdo->prepare($sql);
-    $conexion->execute([$id]);
-    $data = $conexion->fetch(PDO::FETCH_OBJ);
-    Conexion::desconectar();
-}
+    $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
+    $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
+
+
+    $id = null;
+
+    if (!empty($_GET['id'])) {
+        $id = $_REQUEST['id'];
+    } else
+        header("location: listado.php");
+
+    if (null == $id) {
+        $nuevaURL = "listado.php";
+        header('Location: ' . $nuevaURL);
+    } else {
+        $pdo = Conexion::conectar();
+        $sql = "SELECT * FROM productos where id = ?;";
+        $conexion = $pdo->prepare($sql);
+        $conexion->execute([$id]);
+        $data = $conexion->fetch(PDO::FETCH_OBJ);
+        Conexion::desconectar();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -40,6 +53,47 @@ if (null == $id) {
 </head>
 
 <body>
+    <style>
+        html, body {
+            background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
+            font-family: <?php echo $_SESSION['tipoletra'] ?>;
+            padding:0;
+            margin:0;
+            height:100%;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .codigo {
+            display: none;
+            }
+        }
+
+        @media (max-width: 300px) {
+            .detalle {
+                display: none;
+            }
+            
+            .codigo {
+            display: none;
+            }
+
+        }
+
+        tr th{
+            vertical-align: middle;
+            border-style: inset;
+            border-width: 5px;
+        }
+
+        tr td{
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
 
     <div class="container">
         <div class="span10 offset1">

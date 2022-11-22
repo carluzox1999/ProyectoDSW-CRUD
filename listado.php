@@ -28,7 +28,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
     <title>Proyecto DSW</title>
 </head>
 
@@ -74,6 +73,7 @@
         vertical-align: middle;
     }
     </style>
+    
     <div class='float-lg-start'>
         <a href="listado.php"><i class="fa-solid fa-house"
                 style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>
