@@ -2,76 +2,76 @@
 session_start();
 require "conexion.php";
 $conexion = Conexion::conectar();
-if(!isset($_SESSION['usuario'])){
-    header("location: login.php");
-} elseif (isset($_SESSION['usuario'])){
+    if(!isset($_SESSION['usuario'])){
+        header("location: login.php");
+    } elseif (isset($_SESSION['usuario'])){
 
-    $usuarioActual = $_SESSION['usuario'];
+        $usuarioActual = $_SESSION['usuario'];
 
-    $conexion = Conexion::conectar();
-    
-    $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
-    FROM usuarios WHERE usuario = '$usuarioActual';");
+        $conexion = Conexion::conectar();
+        
+        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
+        FROM usuarios WHERE usuario = '$usuarioActual';");
 
-    $especificacionesUsuarioSQL->execute();
-    $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
+        $especificacionesUsuarioSQL->execute();
+        $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
 
-    $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
-    $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
+        $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
+        $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
 
 
 
-    if (!empty($_GET['usuario'])) {
-        $usuario = $_REQUEST['usuario'];
-    } else
-        header("Location: listado.php");
+        if (!empty($_GET['usuario'])) {
+            $usuario = $_REQUEST['usuario'];
+        } else
+            header("Location: listado.php");
 
-    if (!empty($_POST)) {
+        if (!empty($_POST)) {
 
-        $usuario = $_POST['usuario'];
-        $clave = $_POST['clave'];
-        $nombre_completo = $_POST['nombrecompleto'];
-        $correo = $_POST['correo'];
-        $colorfondo = $_POST['colorfondo'];
-        $tipoletra = $_POST['tipoletra'];
+            $usuario = $_POST['usuario'];
+            $clave = $_POST['clave'];
+            $nombre_completo = $_POST['nombrecompleto'];
+            $correo = $_POST['correo'];
+            $colorfondo = $_POST['colorfondo'];
+            $tipoletra = $_POST['tipoletra'];
+
+            try {
+                $pdoPerfil = Conexion::conectar();
+                $pdoPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdoPerfil->beginTransaction();
+                $sqlActualizarPerfil = "UPDATE usuarios  SET usuario = ?, sha2(clave = ?, 256), nombrecompleto = ?, correo = ?, colorfondo = ?, tipoletra = ? WHERE usuario = '$usuarioActual';";
+                $pdoPerfil->commit();
+                $conexion = $pdoPerfil->prepare($sqlActualizarPerfil);
+                $conexion->execute([$usuario, $clave, $nombre_completo, $correo, $colorfondo, $tipoletra]);
+                Conexion::desconectar();
+                $nuevaURL = "listado.php";
+                header('Location: ' . $nuevaURL);
+            } catch (Exception $e) {
+                $pdoPerfil->rollback();
+                echo "Lista no completada: " . $e->getMessage();
+            }
+        }
 
         try {
-            $pdoPerfil = Conexion::conectar();
-            $pdoPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdoPerfil->beginTransaction();
-            $sqlActualizarPerfil = "UPDATE usuarios  SET usuario = ?, sha2(clave = ?, 256), nombrecompleto = ?, correo = ?, colorfondo = ?, tipoletra = ? WHERE usuario = ?;";
-            $pdoPerfil->commit();
-            $conexion = $pdoPerfil->prepare($sqlActualizarPerfil);
-            $conexion->execute([$usuario, $clave, $nombre_completo, $correo, $colorfondo, $tipoletra]);
-            Conexion::desconectar();
-            $nuevaURL = "listado.php";
-            header('Location: ' . $nuevaURL);
+            $pdoMostrarPerfil = Conexion::conectar();
+            $pdoMostrarPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdoMostrarPerfil->beginTransaction();
+            $mostrarPerfilSQL = "SELECT usuario, clave, nombrecompleto, correo, colorfondo, tipoletra FROM usuarios where usuario = '$usuario';";
+            $pdoMostrarPerfil->commit();
+            $conexion = $pdoMostrarPerfil->prepare($mostrarPerfilSQL);
+            $conexion->execute([$usuario]);
+            $data = $conexion->fetch(PDO::FETCH_OBJ);
+
+            $usuario = $data->usuario;
+            $clave = $data->clave;
+            $nombre_completo = $data->nombrecompleto;
+            $correo = $data->correo;
+            $colorfondo = $data->colorfondo;
+            $tipoletra = $data->tipoletra;
         } catch (Exception $e) {
-            $pdoPerfil->rollback();
+            $pdoMostrarPerfil->rollback();
             echo "Lista no completada: " . $e->getMessage();
         }
-    }
-
-    try {
-        $pdoMostrarPerfil = Conexion::conectar();
-        $pdoMostrarPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdoMostrarPerfil->beginTransaction();
-        $mostrarPerfilSQL = "SELECT usuario, clave, nombrecompleto, correo, colorfondo, tipoletra FROM usuarios where usuario = '$usuario';";
-        $pdoMostrarPerfil->commit();
-        $conexion = $pdoMostrarPerfil->prepare($mostrarPerfilSQL);
-        $conexion->execute([$usuario]);
-        $data = $conexion->fetch(PDO::FETCH_OBJ);
-
-        $usuario = $data->usuario;
-        $clave = $data->clave;
-        $nombre_completo = $data->nombrecompleto;
-        $correo = $data->correo;
-        $colorfondo = $data->colorfondo;
-        $tipoletra = $data->tipoletra;
-    } catch (Exception $e) {
-        $pdoMostrarPerfil->rollback();
-        echo "Lista no completada: " . $e->getMessage();
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,8 +161,8 @@ if(!isset($_SESSION['usuario'])){
                 <input type="text" class="form-control" name="tipoletra" placeholder="Fuente" value="<?php echo !empty($tipoletra) ? $tipoletra : ''; ?>">
             </div>
             
-
             <input type='hidden' name='usuario' value='<?= $usuario ?>'>
+
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
@@ -181,5 +181,5 @@ if(!isset($_SESSION['usuario'])){
 
 </html>
 <?php
-}
+    }
 ?>

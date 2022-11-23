@@ -73,6 +73,10 @@
             text-align: center;
             vertical-align: middle;
         }
+
+        h4{
+            text-align: center;
+        }
     </style>
     
     <div class="container">
@@ -85,21 +89,32 @@
                 <h1>Gestión de productos</h1>
             </div>
 
-            <div class="p-2">
-                <?php
-                    $contenidoPerfilSQL = $conexion->query("SELECT usuario FROM usuarios;");
-                    $contenidoPerfilSQL->execute();
-                    $infoPerfil = $contenidoPerfilSQL->fetch(PDO::FETCH_ASSOC);
+            <?php
+                    $pdoContenidoPerfil = Conexion::conectar();
+                    $pdoContenidoPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $pdoContenidoPerfil->beginTransaction();
+                    $contenidoPerfilSQL = "SELECT nombrecompleto FROM usuarios where usuario = '$usuarioActual';";
+                    $pdoContenidoPerfil->commit();
+                    $conexion = $pdoContenidoPerfil->prepare($contenidoPerfilSQL);
+                    $conexion->execute([$usuarioActual]);
+                    $infoPerfil = $conexion->fetch(PDO::FETCH_OBJ);
+                    
+                    $nombrecompleto = $infoPerfil->nombrecompleto;
+
                     $urlEditarPerfil =  "<a href='perfil.php?usuario=" . $usuarioActual . "' class='btn btn-warning' type='button'>Perfil</a>";
+                    $urlCerrarSesion =  "<a href='cerrarUsuario.php?usuario=" . $usuarioActual . "' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
                 ?>
 
-                                              
+            <div class="p-2">
+                <?php  echo "<h4 class='d-flex align-items-center'>$nombrecompleto</h4>"; ?> 
+            </div>
+
+            <div class="p-2">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
                     <div class="dropdown-content">
                         <?php  echo "$urlEditarPerfil"; ?>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
+                        <?php  echo "$urlCerrarSesion"; ?>
                     </div>
                 </div>
                 
