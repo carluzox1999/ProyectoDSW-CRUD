@@ -61,6 +61,7 @@ if(!isset($_SESSION['usuario'])){
         $conexion = $pdo->prepare($sql);
         $conexion->execute([$id]);
         $data = $conexion->fetch(PDO::FETCH_OBJ);
+        
         $nombre = $data->nombre;
         $nombre_corto = $data->nombre_corto;
         $pvp = $data->pvp;
