@@ -54,12 +54,9 @@ $conexion = Conexion::conectar();
 
         try {
             $pdoMostrarPerfil = Conexion::conectar();
-            $pdoMostrarPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdoMostrarPerfil->beginTransaction();
             $mostrarPerfilSQL = "SELECT usuario, clave, nombrecompleto, correo, colorfondo, tipoletra FROM usuarios where usuario = '$usuario';";
-            $pdoMostrarPerfil->commit();
             $conexion = $pdoMostrarPerfil->prepare($mostrarPerfilSQL);
-            $conexion->execute([$usuario]);
+            $conexion->execute();
             $data = $conexion->fetch(PDO::FETCH_OBJ);
 
             $usuario = $data->usuario;
@@ -69,7 +66,6 @@ $conexion = Conexion::conectar();
             $colorfondo = $data->colorfondo;
             $tipoletra = $data->tipoletra;
         } catch (Exception $e) {
-            $pdoMostrarPerfil->rollback();
             echo "Lista no completada: " . $e->getMessage();
         }
 ?>

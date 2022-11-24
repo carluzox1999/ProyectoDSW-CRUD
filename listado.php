@@ -90,18 +90,14 @@
             </div>
 
             <?php
-                    $pdoContenidoPerfil = Conexion::conectar();
-                    $pdoContenidoPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $pdoContenidoPerfil->beginTransaction();
-                    $contenidoPerfilSQL = "SELECT nombrecompleto FROM usuarios where usuario = '$usuarioActual';";
-                    $pdoContenidoPerfil->commit();
-                    $conexion = $pdoContenidoPerfil->prepare($contenidoPerfilSQL);
-                    $conexion->execute([$usuarioActual]);
-                    $infoPerfil = $conexion->fetch(PDO::FETCH_OBJ);
+                    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $nombreSQL = $conexion->query("SELECT nombrecompleto FROM usuarios where usuario = '$usuarioActual';");
+                    $nombreSQL->execute();
+                    $infoPerfil = $nombreSQL->fetch(PDO::FETCH_OBJ);
                     
                     $nombrecompleto = $infoPerfil->nombrecompleto;
 
-                    $urlEditarPerfil =  "<a href='perfil.php?usuario=" . $usuarioActual . "' class='btn btn-warning' type='button'>Perfil</a>";
+
                     $urlCerrarSesion =  "<a href='cerrarUsuario.php?usuario=" . $usuarioActual . "' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
                 ?>
 
@@ -113,7 +109,22 @@
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
                     <div class="dropdown-content">
-                        <?php  echo "$urlEditarPerfil"; ?>
+                        <?php  
+                            $perfilUsuario = $conexion->query("SELECT usuario FROM usuarios WHERE usuario = '$usuarioActual';");
+                            $perfilUsuario->execute();
+                            $usuarioLogin = $perfilUsuario->fetch(PDO::FETCH_ASSOC);
+
+                            if($perfilUsuario -> rowCount() > 0){
+                                $usuarioActual = $usuarioLogin['usuario'];
+                                    
+                                $urlEditarPerfil =  "<a href='perfil.php?usuario=" . $usuarioActual . "' class='btn btn-warning' type='button'>Perfil</a>";
+                            }else{
+                                // print_r("Contraseña a verificar: ".$clave);
+                                header("Location: listado.php");
+                            }
+
+                            echo "$urlEditarPerfil"; 
+                        ?>
                         <?php  echo "$urlCerrarSesion"; ?>
                     </div>
                 </div>
