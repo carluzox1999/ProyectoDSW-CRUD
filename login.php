@@ -47,12 +47,16 @@
                         $clave = hash('sha256', $_POST['clave']);
 
                         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        $query = $conexion->query("SELECT usuario, sha2(clave, 256) FROM usuarios WHERE usuario = '$usuario' AND clave = '$clave'");
+                        $query = $conexion->query("SELECT * FROM usuarios WHERE usuario = '$usuario' AND clave = '$clave'");
                         $query->execute();
                         $usuarioLogin = $query->fetch(PDO::FETCH_ASSOC);
 
                         if($query -> rowCount() > 0){
                             $_SESSION['usuario'] = $usuarioLogin['usuario'];
+                            $_SESSION['nombrecompleto'] = $usuarioLogin['nombrecompleto'];
+                            $_SESSION['correo'] = $usuarioLogin['correo'];
+                            $_SESSION['colorfondo'] = $usuarioLogin['colorfondo'];
+                            $_SESSION['tipoletra'] = $usuarioLogin['tipoletra'];
                             
                             header("location: listado.php");
                         }else{

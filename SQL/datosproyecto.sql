@@ -14,3 +14,13 @@ INSERT INTO `tiendas` VALUES (1,'CENTRAL','600100100'),(2,'SUCURSAL1','600100200
 -- Tabla stocks
 
 INSERT INTO `stocks` VALUES (1,1,2),(1,2,1),(2,1,1),(3,2,1),(3,3,2),(4,3,1),(5,1,2),(5,2,1),(6,2,1),(6,3,2),(7,2,2),(8,3,1),(9,1,1),(9,2,2),(10,2,2),(10,3,2),(11,2,1),(12,1,1),(13,2,2),(14,1,3),(14,2,1),(15,1,2),(15,3,1),(16,2,1),(17,2,1),(17,3,2),(18,2,1),(19,1,1),(20,2,2),(20,3,2),(21,2,1),(22,3,1),(23,2,1),(24,1,1),(25,3,2),(26,1,3),(26,2,2),(26,3,2);
+
+-- Tabla usuarios
+
+INSERT INTO `usuarios`(`usuario`, `clave`, `nombrecompleto`, `correo`, `colorfondo`, `tipoletra`) VALUES ('Carlos',sha2('carlos',256),'Carlos Escolar Calero','carlos@gmail.com','FCBA03','Helvetica');
+
+INSERT INTO `usuarios`(`usuario`, `clave`, `nombrecompleto`, `correo`, `colorfondo`, `tipoletra`) VALUES ('Hector',sha2('hector',256),'Hector Olivares Sanchez','hector@gmail.com','70C1D4','Consolas');
+
+INSERT INTO `usuarios`(`usuario`, `clave`, `nombrecompleto`, `correo`, `colorfondo`, `tipoletra`) VALUES ('Juan',sha2('juan',256),'Juan Suarez Sanchez','juan@gmail.com','D466D0','Times New Roman');
+
+INSERT INTO `usuarios`(`usuario`, `clave`, `nombrecompleto`, `correo`) VALUES ('Usuario',sha2('usuario',256),'Usuario','usu@rio.com');

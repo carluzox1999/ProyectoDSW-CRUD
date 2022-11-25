@@ -6,19 +6,6 @@
     if(!isset($_SESSION['usuario'])){
         header("location: login.php");
     } elseif (isset($_SESSION['usuario'])){
-        
-        $usuarioActual = $_SESSION['usuario'];
-
-        $conexion = Conexion::conectar();
-        
-        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
-        FROM usuarios WHERE usuario = '$usuarioActual';");
-
-        $especificacionesUsuarioSQL->execute();
-        $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
-
-        $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
-        $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
     
 ?>
 <!DOCTYPE html>
@@ -90,41 +77,20 @@
             </div>
 
             <?php
-                    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $nombreSQL = $conexion->query("SELECT nombrecompleto FROM usuarios where usuario = '$usuarioActual';");
-                    $nombreSQL->execute();
-                    $infoPerfil = $nombreSQL->fetch(PDO::FETCH_OBJ);
                     
-                    $nombrecompleto = $infoPerfil->nombrecompleto;
-
-
-                    $urlCerrarSesion =  "<a href='cerrarUsuario.php?usuario=" . $usuarioActual . "' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
+                    $urlEditarPerfil =  "<a href='perfil.php' class='btn btn-warning' type='button'>Perfil</a>";
+                    $urlCerrarSesion =  "<a href='cerrarUsuario.php' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
                 ?>
 
             <div class="p-2">
-                <?php  echo "<h4 class='d-flex align-items-center'>$nombrecompleto</h4>"; ?> 
+                <?php  echo "<h4 class='d-flex align-items-center'>".$_SESSION['nombrecompleto']."</h4>"; ?> 
             </div>
 
             <div class="p-2">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
                     <div class="dropdown-content">
-                        <?php  
-                            $perfilUsuario = $conexion->query("SELECT usuario FROM usuarios WHERE usuario = '$usuarioActual';");
-                            $perfilUsuario->execute();
-                            $usuarioLogin = $perfilUsuario->fetch(PDO::FETCH_ASSOC);
-
-                            if($perfilUsuario -> rowCount() > 0){
-                                $usuarioActual = $usuarioLogin['usuario'];
-                                    
-                                $urlEditarPerfil =  "<a href='perfil.php?usuario=" . $usuarioActual . "' class='btn btn-warning' type='button'>Perfil</a>";
-                            }else{
-                                // print_r("Contraseña a verificar: ".$clave);
-                                header("Location: listado.php");
-                            }
-
-                            echo "$urlEditarPerfil"; 
-                        ?>
+                        <?php echo "$urlEditarPerfil"; ?>
                         <?php  echo "$urlCerrarSesion"; ?>
                     </div>
                 </div>

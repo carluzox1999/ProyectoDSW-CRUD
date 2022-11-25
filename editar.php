@@ -172,9 +172,10 @@ if(!isset($_SESSION['usuario'])){
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
                 <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
-
             </div>
+
             <input type='hidden' name='id' value='<?= $id ?>'>
+            
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>

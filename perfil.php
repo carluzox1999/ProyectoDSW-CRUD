@@ -6,31 +6,10 @@ $conexion = Conexion::conectar();
         header("location: login.php");
     } elseif (isset($_SESSION['usuario'])){
 
-        $usuarioActual = $_SESSION['usuario'];
-
-        $conexion = Conexion::conectar();
-        
-        $especificacionesUsuarioSQL = $conexion->query("SELECT usuario, colorfondo, tipoletra 
-        FROM usuarios WHERE usuario = '$usuarioActual';");
-
-        $especificacionesUsuarioSQL->execute();
-        $especificaciones = $especificacionesUsuarioSQL->fetch(PDO::FETCH_ASSOC);
-
-        $_SESSION['colorfondo'] = $especificaciones["colorfondo"];
-        $_SESSION["tipoletra"] = $especificaciones["tipoletra"];
-
-
-
-        if (!empty($_GET['usuario'])) {
-            $usuario = $_REQUEST['usuario'];
-        } else
-            header("Location: listado.php");
-
         if (!empty($_POST)) {
 
             $usuario = $_POST['usuario'];
-            $clave = $_POST['clave'];
-            $nombre_completo = $_POST['nombrecompleto'];
+            $nombre_completo = $_POST['nombre_completo'];
             $correo = $_POST['correo'];
             $colorfondo = $_POST['colorfondo'];
             $tipoletra = $_POST['tipoletra'];
@@ -39,34 +18,22 @@ $conexion = Conexion::conectar();
                 $pdoPerfil = Conexion::conectar();
                 $pdoPerfil->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdoPerfil->beginTransaction();
-                $sqlActualizarPerfil = "UPDATE usuarios  SET usuario = ?, sha2(clave = ?, 256), nombrecompleto = ?, correo = ?, colorfondo = ?, tipoletra = ? WHERE usuario = '$usuarioActual';";
-                $pdoPerfil->commit();
+                $sqlActualizarPerfil = "UPDATE usuarios  SET nombrecompleto = ?, correo = ?, colorfondo = ?, tipoletra = ? WHERE usuario = '".$_SESSION['usuario']."';";
                 $conexion = $pdoPerfil->prepare($sqlActualizarPerfil);
-                $conexion->execute([$usuario, $clave, $nombre_completo, $correo, $colorfondo, $tipoletra]);
+                $conexion->execute([$nombre_completo, $correo, $colorfondo, $tipoletra]);
+                $pdoPerfil->commit();
                 Conexion::desconectar();
-                $nuevaURL = "listado.php";
-                header('Location: ' . $nuevaURL);
+                $_SESSION['nombrecompleto'] = $nombre_completo;
+                $_SESSION['correo'] = $correo;
+                $_SESSION['colorfondo'] = $colorfondo;
+                $_SESSION['tipoletra'] = $tipoletra;
+
+                header("Location: listado.php");
+
             } catch (Exception $e) {
                 $pdoPerfil->rollback();
                 echo "Lista no completada: " . $e->getMessage();
             }
-        }
-
-        try {
-            $pdoMostrarPerfil = Conexion::conectar();
-            $mostrarPerfilSQL = "SELECT usuario, clave, nombrecompleto, correo, colorfondo, tipoletra FROM usuarios where usuario = '$usuario';";
-            $conexion = $pdoMostrarPerfil->prepare($mostrarPerfilSQL);
-            $conexion->execute();
-            $data = $conexion->fetch(PDO::FETCH_OBJ);
-
-            $usuario = $data->usuario;
-            $clave = $data->clave;
-            $nombre_completo = $data->nombrecompleto;
-            $correo = $data->correo;
-            $colorfondo = $data->colorfondo;
-            $tipoletra = $data->tipoletra;
-        } catch (Exception $e) {
-            echo "Lista no completada: " . $e->getMessage();
         }
 ?>
 <!DOCTYPE html>
@@ -131,30 +98,26 @@ $conexion = Conexion::conectar();
         <form class="row g-3" method="post" action="perfil.php" id="formularioActualizar" autocomplete="off">
             <div class="col-md-6">
                 <label class="form-label">Usuario</label>
-                <input type="text" class="form-control" name="usuario" placeholder="Usuario" value="<?php echo !empty($usuario) ? $usuario : ''; ?>">
+                <input type="text" class="form-control" name="usuario" placeholder="Usuario" value="<?php echo $_SESSION['usuario']; ?>" readonly disabled>
 
             </div>
             <div class="col-md-6">
-                <label class="form-label">Clave</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Clave" value="<?php echo !empty($clave) ? $clave : ''; ?>"/>
-            </div>
-            <div class="col-md-6">
                 <label class="form-label">Nombre Completo</label>
-                <input type="text" class="form-control" name="nombre_completo" placeholder="Nombre Completo" value="<?php echo !empty($nombre_completo) ? $nombre_completo : ''; ?>">
+                <input type="text" class="form-control" name="nombre_completo" placeholder="Nombre Completo" value="<?php echo $_SESSION['nombrecompleto']; ?>">
 
             </div>
             <div class="col-md-6">
                 <label class="form-label">Correo</label>
-                <input type="email" class="form-control" name="correo" placeholder="Correo" value="<?php echo !empty($correo) ? $correo : ''; ?>">
+                <input type="email" class="form-control" name="correo" placeholder="Correo" value="<?php echo $_SESSION['correo']; ?>">
 
             </div>
             <div class="col-md-6">
                 <label class="form-label">Color Fondo</label>
-                <input type="text" class="form-control" name="colorfondo" placeholder="Color" value="<?php echo !empty($colorfondo) ? $colorfondo : ''; ?>">
+                <input type="text" class="form-control" name="colorfondo" placeholder="Color" value="<?php echo $_SESSION['colorfondo']; ?>">
             </div>
             <div class="col-md-6">
             <label class="form-label">Tipo Letra</label>
-                <input type="text" class="form-control" name="tipoletra" placeholder="Fuente" value="<?php echo !empty($tipoletra) ? $tipoletra : ''; ?>">
+                <input type="text" class="form-control" name="tipoletra" placeholder="Fuente" value="<?php echo $_SESSION['tipoletra']; ?>">
             </div>
             
             <input type='hidden' name='usuario' value='<?= $usuario ?>'>

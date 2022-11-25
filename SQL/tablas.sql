@@ -32,3 +32,15 @@ cascade on delete cascade,
  constraint fk_stock_tienda foreign key(tienda) references tiendas(id) on update
 cascade on delete cascade
 );
+
+-- Tabla Usuarios
+create table usuarios(
+
+usuario varchar(20) primary key,
+clave varchar(64) not null,
+nombrecompleto varchar(200) not null,
+
+correo varchar(50) not null,
+colorfondo varchar(7) not null default 'EFF5F5',
+tipoletra varchar(30) not null default 'Arial'
+);
