@@ -92,47 +92,76 @@ $conexion = Conexion::conectar();
         }
     </style>
 
-    <h1>Actualizar Producto</h1>
+    <div class="container">
+        <div class="d-flex justify-content-between">
+            <div class='p2'>
+                <a href="listado.php"><i class="fa-solid fa-house"
+                        style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>
+            </div>
+            <div class='p2'>
+                <h1>Perfil</h1>
+            </div>
 
-    <div class="grid estilodiv">
-        <form class="row g-3" method="post" action="perfil.php" id="formularioActualizar" autocomplete="off">
-            <div class="col-md-6">
-                <label class="form-label">Usuario</label>
-                <input type="text" class="form-control" name="usuario" placeholder="Usuario" value="<?php echo $_SESSION['usuario']; ?>" readonly disabled>
+            <?php
+                $urlEditarPerfil =  "<a href='perfil.php' class='btn btn-warning' type='button'>Perfil</a>";
+                $urlCerrarSesion =  "<a href='cerrarUsuario.php' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
+            ?>
 
+            <div class="p-2">
+                <?php echo "<h4 class='d-flex align-items-center'>" . $_SESSION['nombrecompleto'] . "</h4>"; ?>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Nombre Completo</label>
-                <input type="text" class="form-control" name="nombre_completo" placeholder="Nombre Completo" value="<?php echo $_SESSION['nombrecompleto']; ?>">
 
+            <div class="p-2">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
+                    <div class="dropdown-content">
+                        <?php echo "$urlEditarPerfil"; ?>
+                        <?php echo "$urlCerrarSesion"; ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Correo</label>
-                <input type="email" class="form-control" name="correo" placeholder="Correo" value="<?php echo $_SESSION['correo']; ?>">
+        </div>
 
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Color Fondo</label>
-                <input type="text" class="form-control" name="colorfondo" placeholder="Color" value="<?php echo $_SESSION['colorfondo']; ?>">
-            </div>
-            <div class="col-md-6">
-            <label class="form-label">Tipo Letra</label>
-                <input type="text" class="form-control" name="tipoletra" placeholder="Fuente" value="<?php echo $_SESSION['tipoletra']; ?>">
-            </div>
-            
-            <input type='hidden' name='usuario' value='<?= $usuario ?>'>
+            <form class="row g-3" method="post" action="perfil.php" id="formularioActualizar" autocomplete="off">
+                <div class="col-md-6">
+                    <label class="form-label">Usuario</label>
+                    <input type="text" class="form-control" name="usuario" placeholder="Usuario" value="<?php echo $_SESSION['usuario']; ?>" readonly disabled>
 
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-            </div>
-            <div class="d-grid gap-2">
-                <a href="listado.php" class="btn btn-secondary">Volver</a>
-            </div>
-        </form>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" name="nombre_completo" placeholder="Nombre Completo" value="<?php echo $_SESSION['nombrecompleto']; ?>">
+
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Correo</label>
+                    <input type="email" class="form-control" name="correo" placeholder="Correo" value="<?php echo $_SESSION['correo']; ?>">
+
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Color Fondo</label>
+                    <input type="text" class="form-control" name="colorfondo" placeholder="Color" value="<?php echo $_SESSION['colorfondo']; ?>">
+                </div>
+                <div class="col-md-6">
+                <label class="form-label">Tipo Letra</label>
+                    <input type="text" class="form-control" name="tipoletra" placeholder="Fuente" value="<?php echo $_SESSION['tipoletra']; ?>">
+                </div>
+                
+                <input type='hidden' name='usuario' value='<?= $usuario ?>'>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="listado.php" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
     </div>
+    
 
     <script src="./js/bootstrap.min.js"></script>
-    <script src="./js/script.js"></script>
+    <script src="https://kit.fontawesome.com/ad7c1d9068.js" crossorigin="anonymous"></script>
+
     <?php
     Conexion::desconectar();
     ?>

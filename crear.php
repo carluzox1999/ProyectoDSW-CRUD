@@ -94,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/style2.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <title>Crear producto</title>
@@ -101,12 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <style>
-        html, body {
+        html,
+        body {
             background-color: <?php echo "#".$_SESSION['colorfondo'] ?>;
             font-family: <?php echo $_SESSION['tipoletra'] ?>;
-            padding:0;
-            margin:0;
-            height:100%;
+            padding: 0;
+            margin: 0;
+            height: 100%;
         }
 
         body::-webkit-scrollbar {
@@ -115,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         @media (max-width: 800px) {
             .codigo {
-            display: none;
+                display: none;
             }
         }
 
@@ -123,48 +125,78 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             .detalle {
                 display: none;
             }
-            
+
             .codigo {
-            display: none;
+                display: none;
             }
 
         }
 
-        tr th{
+        tr th {
             vertical-align: middle;
             border-style: inset;
             border-width: 5px;
         }
 
-        tr td{
+        tr td {
             text-align: center;
             vertical-align: middle;
         }
     </style>
 
-    <h1>Crear Producto</h1>
+    <div class="container">
+        <div class="d-flex justify-content-between">
+            <div class='p2'>
+                <a href="listado.php"><i class="fa-solid fa-house"
+                        style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>
+            </div>
+            <div class='p2'>
+                <h1>Crear Producto</h1>
+            </div>
 
-    <div class="grid estilodiv">
+            <?php
+                $urlEditarPerfil =  "<a href='perfil.php' class='btn btn-warning' type='button'>Perfil</a>";
+                $urlCerrarSesion =  "<a href='cerrarUsuario.php' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
+            ?>
+
+            <div class="p-2">
+                <?php echo "<h4 class='d-flex align-items-center'>" . $_SESSION['nombrecompleto'] . "</h4>"; ?>
+            </div>
+
+            <div class="p-2">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
+                    <div class="dropdown-content">
+                        <?php echo "$urlEditarPerfil"; ?>
+                        <?php echo "$urlCerrarSesion"; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form class="row g-3" method="post" action="crear.php" id="formularioCrear" autocomplete="off">
             <div class="col-md-6">
                 <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="<?php echo !empty($inputNombre) ? $inputNombre : ''; ?>">
+                <input type="text" class="form-control" name="nombre" placeholder="Nombre"
+                    value="<?php echo !empty($inputNombre) ? $inputNombre : ''; ?>">
                 <?php if (!empty($nombreError)) : ?>
-                    <span class="text-danger"><?php echo $nombreError; ?></span>
+                <span class="text-danger"><?php echo $nombreError; ?></span>
                 <?php endif; ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Nombre Corto</label>
-                <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto" value="<?php echo !empty($inputNombreCorto) ? $inputNombreCorto : ''; ?>">
+                <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto"
+                    value="<?php echo !empty($inputNombreCorto) ? $inputNombreCorto : ''; ?>">
                 <?php if (!empty($nCortoError)) : ?>
-                    <span class="text-danger"><?php echo $nCortoError; ?></span>
+                <span class="text-danger"><?php echo $nCortoError; ?></span>
                 <?php endif; ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Precio (€)</label>
-                <input type="number" class="form-control" name="pvp" placeholder="Precio" value="<?php echo !empty($inputPrecio) ? $inputPrecio : ''; ?>">
+                <input type="number" class="form-control" name="pvp" placeholder="Precio"
+                    value="<?php echo !empty($inputPrecio) ? $inputPrecio : ''; ?>">
                 <?php if (!empty($precioError)) : ?>
-                    <span class="text-danger"><?php echo $precioError; ?></span>
+                <span class="text-danger"><?php echo $precioError; ?></span>
                 <?php endif; ?>
             </div>
             <div class="col-md-6">
@@ -172,21 +204,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select class="form-control" name="familia">
                     <option value="<?php echo !empty($select) ? $select : ''; ?>">Seleccione Opcion</option>
                     <?php
-                    $pdoSelect = Conexion::conectar();
-                    $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
-                    $sqlSelect->execute();
-                    while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
-                        echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
-                    }
-                    ?>
+                            $pdoSelect = Conexion::conectar();
+                            $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
+                            $sqlSelect->execute();
+                            while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
+                                echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
+                            }
+                            ?>
                     <span class="text-danger"><?php echo $selectError; ?></span>
                 </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Descripción</label>
-                <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..." value="<?php echo !empty($txtDescripcion) ? $txtDescripcion : ''; ?>"></textarea>
+                <textarea class="form-control" name="descripcion" cols="10" rows="5"
+                    placeholder="Ingrese una descripción..."
+                    value="<?php echo !empty($txtDescripcion) ? $txtDescripcion : ''; ?>"></textarea>
                 <?php if (!empty($descripcionError)) : ?>
-                    <span class="text-danger"><?php echo $descripcionError; ?></span>
+                <span class="text-danger"><?php echo $descripcionError; ?></span>
                 <?php endif; ?>
             </div>
             <div class="d-grid gap-2">
@@ -203,7 +237,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 
+
     <script src="./js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/ad7c1d9068.js" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

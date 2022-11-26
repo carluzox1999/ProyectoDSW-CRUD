@@ -80,6 +80,7 @@ if(!isset($_SESSION['usuario'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/style2.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <title>Editar producto</title>
@@ -128,64 +129,93 @@ if(!isset($_SESSION['usuario'])){
         }
     </style>
 
-    <h1>Actualizar Producto</h1>
-
-    <div class="grid estilodiv">
-        <form class="row g-3" method="post" action="editar.php" id="formularioActualizar" autocomplete="off">
-            <div class="col-md-6">
-                <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="<?php echo !empty($nombre) ? $nombre : ''; ?>">
-
+    <div class="container">
+        <div class="d-flex justify-content-between">
+            <div class='p2'>
+                <a href="listado.php"><i class="fa-solid fa-house"
+                        style="margin-top: 20px; margin-left: 20px; margin-right: 20px; width: 10px;"></i></a>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Nombre Corto</label>
-                <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto" value="<?php echo !empty($nombre_corto) ? $nombre_corto : ''; ?>">
-
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Precio (€)</label>
-                <input type="number" class="form-control" name="pvp" placeholder="Precio" value="<?php echo !empty($pvp) ? $pvp : ''; ?>">
-
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Familia</label>
-                <select class="form-control" name="familia">
-                    <?php
-
-                    $pdoSelect = Conexion::conectar();
-                    $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
-                    $sqlSelect->execute();
-
-                    $sqlFamilia = $pdoSelect->prepare("SELECT * FROM familias WHERE cod=?;");
-                    $sqlFamilia->execute([$_GET['familia']]);
-                    $dataF = $sqlFamilia->fetch(PDO::FETCH_OBJ);
-                    echo '<option selected value="' . $dataF->cod . '">' . $dataF->nombre . '</option>';
-
-                    while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
-                        if ($data->cod != $dataF->cod)
-                            echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
-                    }
-                    Conexion::desconectar();
-                    ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                <textarea class="form-control" name="descripcion" cols="20" rows="10" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
+            <div class='p2'>
+                <h1>Actualizar Producto</h1>
             </div>
 
-            <input type='hidden' name='id' value='<?= $id ?>'>
-            
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+            <?php
+                $urlEditarPerfil =  "<a href='perfil.php' class='btn btn-warning' type='button'>Perfil</a>";
+                $urlCerrarSesion =  "<a href='cerrarUsuario.php' class='btn btn-danger' type='button'>Cerrar Sesión</a>";
+            ?>
+
+            <div class="p-2">
+                <?php echo "<h4 class='d-flex align-items-center'>" . $_SESSION['nombrecompleto'] . "</h4>"; ?>
             </div>
-            <div class="d-grid gap-2">
-                <a href="listado.php" class="btn btn-secondary">Volver</a>
+
+            <div class="p-2">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropbtn">Menú</button>
+                    <div class="dropdown-content">
+                        <?php echo "$urlEditarPerfil"; ?>
+                        <?php echo "$urlCerrarSesion"; ?>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+
+            <form class="row g-3" method="post" action="editar.php" id="formularioActualizar" autocomplete="off">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="<?php echo !empty($nombre) ? $nombre : ''; ?>">
+
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Nombre Corto</label>
+                    <input type="text" class="form-control" name="nombre_corto" placeholder="Nombre Corto" value="<?php echo !empty($nombre_corto) ? $nombre_corto : ''; ?>">
+
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Precio (€)</label>
+                    <input type="number" class="form-control" name="pvp" placeholder="Precio" value="<?php echo !empty($pvp) ? $pvp : ''; ?>">
+
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Familia</label>
+                    <select class="form-control" name="familia">
+                        <?php
+
+                        $pdoSelect = Conexion::conectar();
+                        $sqlSelect = $pdoSelect->query("SELECT cod, nombre FROM familias");
+                        $sqlSelect->execute();
+
+                        $sqlFamilia = $pdoSelect->prepare("SELECT * FROM familias WHERE cod=?;");
+                        $sqlFamilia->execute([$_GET['familia']]);
+                        $dataF = $sqlFamilia->fetch(PDO::FETCH_OBJ);
+                        echo '<option selected value="' . $dataF->cod . '">' . $dataF->nombre . '</option>';
+
+                        while ($data = $sqlSelect->fetch(PDO::FETCH_OBJ)) {
+                            if ($data->cod != $dataF->cod)
+                                echo '<option value="' . $data->cod . '">' . $data->nombre . '</option>';
+                        }
+                        Conexion::desconectar();
+                        ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-control" name="descripcion" cols="10" rows="5" placeholder="Ingrese una descripción..."><?php echo !empty($descripcion) ? $descripcion : ''; ?></textarea>
+                </div>
+
+                <input type='hidden' name='id' value='<?= $id ?>'>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="listado.php" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
     </div>
-
+    
     <script src="./js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/ad7c1d9068.js" crossorigin="anonymous"></script>
+
     <?php
     Conexion::desconectar();
     ?>
