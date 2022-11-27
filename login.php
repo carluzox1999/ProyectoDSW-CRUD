@@ -16,6 +16,15 @@
     <title>Principal</title>
 </head>
 <body>
+    <style>
+        A:link {text-decoration: none; color: black;}
+        A:hover { color: black; text-decoration: none }
+        A:visited {color: black;  text-decoration: none }
+	    *{outline:none !important;}
+        *:focus {outline: none !important;}textarea:focus, input:focus{outline: none !important;}	
+        a{text-decoration: none !important;outline: none !important;}
+    </style>
+
     <div class="d-flex d-flex justify-content-center">
         <div class="bg-light text-white col-md-6 d-flex justify-content-center align-items-center">
             <div class="imagen">
@@ -35,14 +44,14 @@
                     </div>
                         
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Login</button>
+                        <button type="submit" class="btn btn-success" id="login">Login</button>
                     </div> 
                 </form>
                 <?php
                     if ($_POST) {
                         require "conexion.php";
                         $conexion = Conexion::conectar();
-                        
+
                         $usuario = $_POST['usuario'];
                         $clave = hash('sha256', $_POST['clave']);
 
@@ -60,10 +69,16 @@
                             
                             header("location: listado.php");
                         }else{
-                            // print_r("Contraseña a verificar: ".$clave);
+                            if(isset($_COOKIE["sessionError"])){
+                                $numeroLoginError = sizeof($_COOKIE["sessionError"]);
+
+                            }else{
+                                $numeroLoginError = 0;
+                            }     
                             echo "<br><h5 style='color: red;'>Usuario o password incorrectos</h5>";
-                        }
+                        } 
                     }
+                    setcookie("sessionError[$numeroLoginError]", time()+2592000);
                 ?>
             </div>
         </div>
